@@ -1,0 +1,235 @@
+<view class="page" wx:if="{{showTopic}}">
+  <!-- 列表 -->
+  <view 
+    class="CircleList" 
+    wx:for="{{topicList}}"
+    wx:for-item="item"
+    wx:key="index">
+      <!-- 头像、昵称、内容 -->
+      <view class="invitation-item">
+        <view 
+          class="left-view" 
+          data-userId="{{item.publisherId}}" 
+          bindtap="handlerLookUser">
+            <image 
+              class="user-icon" 
+              src="{{item.publisherIcon || '../../img/header/u3.jpg'}}">
+            </image>
+        </view>
+        <view class="right-view">
+          <view class="user-name-view">
+            <label class="user-name">{{item.publisherNick}}</label>
+          </view>
+          <view class="user-content-view">
+            <text class="user-content">{{item.text}}</text>
+          </view>
+          <view class="photo-view">
+            <view 
+              class="photo" 
+              wx:for="{{item.imagesList}}" 
+              wx:for-item="imageUrl"
+              wx:key="imageUrl">
+                <image
+                  mode="aspectFill" 
+                  bindtap="LookPhoto"
+                  data-imageslist="{{item.imagesList}}"
+                  data-photUrl="{{imageUrl}}" 
+                  src="{{imageUrl}}">
+                </image>
+            </view>
+          </view>
+          <!-- 地理位置 -->
+          <view class="user-address-view">
+            <label wx:if="{{item.locFlag == 1}}">{{item.address}}</label>
+          </view>
+          <!-- 距离 -->
+          <view class="user-dstance" wx:if="{{!userId}}">
+            <view>
+              <text wx:if="{{item.locFlag == 1}}">距离{{item.distance}}</text>
+            </view>
+            <view
+              wx:if="{{listType == 1}}"
+              class="delTopic"
+              data-topicId="{{item.topicId}}"
+              data-topicPublisherId="{{item.publisherId}}"
+              bindtap="handlerDelTopic">
+              删除
+            </view>
+          </view>
+          <!-- 时间、删除按钮、点赞评论按钮 -->
+          <view class="TDD-view">
+            <label>{{item.createTime}}</label>
+            <view
+              class="praise item"
+              data-topicId="{{item.topicId}}"
+              data-publisherId="{{item.publisherId}}"
+              data-isPraise="{{item.curUserIsPraise}}"
+              data-topicType="{{item.topicType}}"
+              bindtap="handlerPraise">
+                <image 
+                  src="{{item.curUserIsPraise ? '/img/sq/praise-active.png': '/img/sq/praise.png'}}">
+                </image>
+                <view class="num">{{item.praiseCount}}</view>
+            </view>
+            <view 
+              class="comment item"
+              data-topicId="{{item.topicId}}"
+              data-publisherId="{{item.publisherId}}"
+              data-topicType="{{item.topicType}}"
+              bindtap="hanlderShowCommentDialog">
+                <image src="/img/sq/comment.png"></image>
+                <view class="num">{{item.commentCount}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+  </view>
+
+  <!-- 发布帖子入口 -->
+  <view 
+    wx:if="{{!userId && listType != 1 && listType != 2 && listType != 3 && account}}"
+    class="uploadInvitataion"
+    catchtap="handlerSwitchSendInvitation">
+      <image src="../../img/sq/add-icon.png"></image>
+  </view>
+
+  <!-- 评论按钮弹出框 -->
+  <view class="modals modals-bottom-dialog" catchtouchmove="true" hidden="{{hideModal}}">
+    <view class="modals-cancel" bindtap="handlerHideCommentDialog"></view>
+    <view class="bottom-dialog-body bottom-pos comment" animation="{{animationData}}">
+      <!-- 关闭按钮 -->
+      <image 
+        class="close"
+        src="../../img/sq/close.png"
+        bindtap="handlerHideCommentDialog">
+      </image>
+      <!-- 评论头部 -->
+      <view class="header">
+        所有评论
+      </view>
+      <!-- 评论列表 -->
+      <view class="center">
+        <scroll-view scroll-y="true" class="commentList">
+          <view 
+            class="item" 
+            wx:for="{{commentList}}"
+            wx:for-item="item"
+            wx:key="item">
+              <view class="header_img">
+                <image 
+                  class="headerImg" 
+                  src="{{item.publisherIcon || '../../img/header/u3.jpg'}}"
+                  data-userId="{{item.publisherId}}" 
+                  bindtap="handlerLookUser">
+                </image>
+              </view>
+              <view class="info">
+                <view class="name">{{item.publisherNick}}</view>
+                <view class="content">{{item.text}}</view>
+                <view class="operation">
+                  <view class="time">{{item.createTime}}</view>
+                  <view 
+                    class="reply-btn"
+                    data-publisherNick="{{item.publisherNick}}"
+                    data-commentId="{{item.commentId}}"
+                    catchtap="hanlderReplyCommentDialog">
+                    回复
+                  </view>
+                  <view
+                    wx:if="{{item.publisherId === account}}"
+                    class="delete"
+                    data-commentId="{{item.commentId}}"
+                    catchtap="handlerDelComment">
+                    删除
+                  </view>
+                </view>
+                <view 
+                  class="all_comment"
+                  data-commentId="{{item.commentId}}"
+                  data-showChild="{{item.showChild}}"
+                  bindtap="handlerCommentReplyList">
+                    <text class="line"></text>
+                    <text class="text">展开查看所有回复</text>
+                    <image 
+                      class="{{item.showChild ? 'open' : ''}}" 
+                      src="../../img/homeIcon/arrow_down.png">
+                    </image>
+                </view>
+                <!-- 评论的二级子评论 -->
+                <view class="other_comment_list" wx:if="{{item.showChild}}">
+                  <view class="empty" wx:if="{{item.children < 1}}">暂无回复~</view>
+                  <view 
+                    class="item"
+                    wx:for="{{item.children}}"
+                    wx:for-item="replyItem"
+                    wx:key="replyItem">
+                      <view class="header_img">
+                        <image 
+                          class="headerImg" 
+                          src="{{replyItem.publisherIcon || '../../img/header/u3.jpg'}}"
+                          data-userId="{{replyItem.publisherId}}" 
+                          bindtap="handlerLookUser">
+                        </image>
+                      </view>
+                      <!-- 子回复信息 -->
+                      <view class="info">
+                        <view class="name">{{replyItem.publisherNick}}</view>
+                        <view class="content">{{replyItem.text}}</view>
+                        <!-- 操作区域 -->
+                        <view class="operation">
+                          <view class="time">{{replyItem.createTime}}</view>
+                          <view
+                            wx:if="{{replyItem.publisherId === account}}"
+                            data-commentId="{{item.commentId}}"
+                            data-replyId="{{replyItem.replyId}}"
+                            class="delete flex"
+                            catchtap="handlerDelReply">
+                              删除
+                          </view>
+                        </view>
+                      </view>
+                  </view>
+                </view>
+              </view>
+          </view>
+        </scroll-view>
+      </view>
+      <!-- 发送评论区域 -->
+      <view class="footer">
+        <input 
+          value="{{commentText}}"
+          bindinput="handlerGetCommentText" 
+          placeholder="请输入评论"/>
+        <view class="sendMessage" bindtap="handlerSendMessage">发布</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 回复按钮弹出框 -->
+  <view class="modals modals-reply modals-bottom-dialog " catchtouchmove="true" hidden="{{hideReplayModal}}">
+    <view class="modals-cancel" bindtap="handlerHideReplyDialog"></view>
+    <view class="bottom-dialog-body bottom-pos reply" animation="{{animationReplyData}}">
+      <!-- 关闭按钮 -->
+      <image 
+        class="close"
+        src="../../img/sq/close.png"
+        bindtap="handlerHideReplyDialog">
+      </image>
+      <!-- 回复对象 -->
+      <view class="replyMark">
+        正在回复
+        <text class="publisherNick">{{publisherNick}}</text>
+      </view>
+      <!-- 发送回复区域 -->
+      <view class="footer">
+        <view style="flex:1;">
+          <input
+            value="{{replyText}}"
+            bindinput="handlerGetReplyText" 
+            placeholder="请输入回复"/>
+        </view>
+        <view class="sendMessage" bindtap="handlerReplyMessage">发布</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "topicList": "/components/c-topicList/c-topicList"
+  },
+  "enablePullDownRefresh": true
+}

@@ -1,0 +1,123 @@
+<!-- pages/chat/chat.wxml -->
+<view class="cu-chat">
+    <view class="add-black-list">
+        <button bindtap="addBlackList" class="cu-btn bg-black shadow round">加入黑名单</button>
+    </view>
+    <scroll-view scroll-y scroll-into-view='{{toView}}' style='height: {{scrollHeight}};'>
+        <!-- <view class='scrollMsg'> -->
+        <block wx:key wx:for='{{msgList}}' wx:for-index="index">
+            <!-- 文本 -->
+            <view id='msg-{{index}}' class="cu-item">
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <view class="content shadow">
+                        <text>喵喵喵！喵喵喵！</text>
+                    </view>
+                </view>
+                <view class="date ">13:23</view>
+            </view>
+            <view id='msg-{{index}}' class="cu-item self">
+                <view class="main">
+                    <view class="content bg-green shadow">
+                        <text>喵喵喵！喵喵喵！喵喵喵！喵喵！喵喵！！喵！喵喵喵！</text>
+                    </view>
+                </view>
+                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">2018年3月23日 13:23</view>
+            </view>
+            <!-- 图片 -->
+            <view id='msg-{{index}}' class="cu-item">
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix"></image>
+                </view>
+                <view class="date">13:23</view>
+            </view>
+            <view id='msg-{{index}}' class="cu-item self">
+                <view class="main">
+                    <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix"></image>
+                </view>
+                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">13:23</view>
+            </view>
+            <!-- 语音 -->
+            <view id='msg-{{index}}' class="cu-item">
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <view class="content shadow">
+                        <text class="cuIcon-sound text-xxl padding-right-xl"></text>
+                    </view>
+                    <view class="action text-bold text-grey">3"</view>
+                </view>
+                <view class="date">13:23</view>
+            </view>
+            <view id='msg-{{index}}' class="cu-item self">
+                <view class="main">
+                    <view class="action text-bold text-grey">3"</view>
+                    <view class="content shadow">
+                        <text class="cuIcon-sound text-xxl padding-right-xl"></text>
+                    </view>
+                </view>
+                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">13:23</view>
+            </view>
+            <!-- 位置 -->
+            <view id='msg-{{index}}' class="cu-item">
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <view class="content shadow">喵星球，喵喵市</view>
+                    <view class="action">
+                        <text class="cuIcon-locationfill text-orange text-xxl"></text>
+                    </view>
+                </view>
+                <view class="date">13:23</view>
+            </view>
+            <view id='msg-{{index}}' class="cu-item self">
+                <view class="main">
+                    <view class="action">
+                        <text class="cuIcon-locationfill text-orange text-xxl"></text>
+                    </view>
+                    <view class="content shadow">喵星球，喵喵市</view>
+                </view>
+                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">13:23</view>
+            </view>
+            <!-- 单个消息1 客服发出（左） -->
+            <!-- <view wx:if='{{item.speaker=="server"}}' id='msg-{{index}}' style='display: flex; padding: 2vw 11vw 2vw 2vw;'>
+                <view style='width: 11vw; height: 11vw;'>
+                    <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='../../images/contact_member.png'></image>
+                </view>
+                <view style='width: 4vw; height: 11vw; margin-left: 0.5vw; display: flex; align-items: center; z-index: 9;'>
+                    <image style='width: 4vw;' src='../../images/left_msg.png' mode='widthFix'></image>
+                </view>
+                <view class='leftMsg'>{{item.content}}</view>
+            </view> -->
+            <!-- 单个消息2 用户发出（右） -->
+            <!-- <view wx:else id='msg-{{index}}' style='display: flex; justify-content: flex-end; padding: 2vw 2vw 2vw 11vw;'>
+                <view class='rightMsg'>{{item.content}}</view>
+                <view style='width: 4vw; height: 11vw; margin-right: 0.5vw; display: flex; align-items: center; z-index: 9;'>
+                    <image style='width: 4vw;' src='../../images/right_msg.png' mode='widthFix'></image>
+                </view>
+                <view style='width: 11vw; height: 11vw;'>
+                    <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{cusHeadIcon}}'></image>
+                </view>
+            </view> -->
+        </block>
+        <!-- </view> -->
+        <!-- 占位 -->
+        <view style='width: 100%; height: 18vw;'></view>
+    </scroll-view>
+    <view class="cu-bar foot input {{inputBottom!=0?'cur':''}}" style="bottom:{{inputBottom}}">
+        <view class="action">
+            <text class="cuIcon-sound text-grey"></text>
+        </view>
+        <input class="solid-bottom" bindconfirm='sendClick' adjust-position='{{false}}' value='{{inputVal}}' confirm-type='send' bindfocus='focus' bindblur='blur' maxlength="300" cursor-spacing="10"></input>
+        <view class="action">
+            <text class="cuIcon-emojifill text-grey"></text>
+        </view>
+        <view class="action file">
+            <text class="cuIcon-roundadd text-grey"></text>
+        </view>
+        <!-- <button class="cu-btn bg-green shadow">发送</button> -->
+    </view>
+</view>

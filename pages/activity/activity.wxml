@@ -1,0 +1,70 @@
+<!--pages/activity/activity.wxml-->
+<image class="banner" src="../../img/activity/ac_banner.jpg"></image>
+<view class="atV">
+  <image class="atIcon" src="../../img/activity/laba.png"></image>
+  <text>阜阳西站夜市地摊招聘兼职人员了！！！</text>
+</view>
+<view>
+  <view class="newV">
+    <image class="newIcon" src="../../img/activity/heart.png"></image>
+    <text class="newTv">火爆新店 | 想不到的新优惠</text>
+  </view>
+  <swiper class="bannernew" indicator-dots="{{indicatorDots}}"
+    autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}">
+    <block wx:for="{{banner}}" wx:key="*this">
+      <swiper-item>
+        <view>
+          <image mode="scaleToFill" class="bannerImg" src="{{item.img}}"></image>
+          <view>
+            <text>{{item.title}}</text>
+          </view>
+          <view>
+            <text class="realPrice">￥{{item.realPrice}}</text>
+          </view>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+  <view wx:for="{{activity}}" wx:key="*this">
+    <view class="itemHeader">
+      <text class="title">{{item.header}}</text>
+      <text class="more">更多></text>
+    </view>
+    <view class="scV">
+      <scroll-view class="sc" scroll-x="true">
+      <view class="itV">
+        <view class="itVv" wx:for="{{item.items}}" wx:key="*this" wx:for-item="it">
+          <image class="itImg" src="{{it.img}}"></image>
+          <view>
+            <text class="itC">{{it.content}}</text>
+          </view>
+           <view>
+            <text class="itP">￥{{it.price}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    </view> 
+  </view>
+  <view wx:for="{{activity}}" wx:key="*this">
+    <view class="itemHeader">
+      <text class="title">{{item.header}}</text>
+      <text class="more">更多></text>
+    </view>
+    <view class="scV">
+      <scroll-view class="sc" scroll-x="true">
+      <view class="itV">
+        <view class="itVv" wx:for="{{item.items}}" wx:key="*this" wx:for-item="it">
+          <image class="itImg" src="{{it.img}}"></image>
+          <view>
+            <text class="itC">{{it.content}}</text>
+          </view>
+           <view>
+            <text class="itP">￥{{it.price}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    </view> 
+  </view>
+</view>

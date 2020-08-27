@@ -1,0 +1,25 @@
+/* pages/chatList/chatList.wxss */
+@import "../chat/main.wxss";
+@import "../chat/icon.wxss";
+
+.cu-list.menu-avatar>.cu-item::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 200%;
+    height: 200%;
+    border-bottom: 1rpx solid #ddd;
+    border-radius: inherit;
+    content: " ";
+    transform: scale(.5);
+    transform-origin: 0 0;
+    pointer-events: none;
+}
+
+.jump-black-list {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    z-index: 9999;
+}

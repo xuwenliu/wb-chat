@@ -1,0 +1,263 @@
+/* pages/shopDetail/shopDetail.wxss */
+page{
+  background-color: #f1f1f1;
+}
+.shopHeader{
+  width: 100%;
+  height: 220rpx;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+}
+.shopLogoV{
+  width: 40%;
+}
+.shopLogo{
+  width: 84%;
+  height: 180rpx;
+  margin: 20rpx 0rpx 20rpx 20rpx;
+  border-radius: 10rpx;
+}
+.shopHeaderRight{
+  width: 60%;
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20rpx;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+.shopHeaderRightTitle{
+  font-weight: bold;
+}
+.shortInfo{
+  font-size: 26rpx;
+  color: #777;
+}
+.shopHeaderBtns{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.sub{
+  max-width: 140rpx;
+  max-height: 60rpx;
+  background-color: red;
+  color: white;
+  line-height: 30rpx;
+  box-sizing:content-box;
+  font-size: 24rpx;
+}
+.msg{
+  max-width: 50rpx;
+  max-height: 60rpx;
+  font-size: 24rpx;
+  line-height: 30rpx;
+  box-sizing:content-box;
+  background-color: teal;
+  color: white;
+}
+.map{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  height: 110rpx;
+  margin-top: 20rpx;
+}
+.mapIcon{
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: 20rpx;
+}
+.mapTv{
+  color: #777;
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+.time{
+  width: 100%;
+  background-color: white;
+  height: 80rpx;
+  max-height: 80rpx;
+  margin-top: 2rpx;
+  box-sizing: border-box;
+}
+.timeV{
+  width: 60rpx;
+  height: 80rpx;
+  float: left;
+}
+.timeIcon{
+  width: 40rpx;
+  height: 40rpx;
+  margin-top: 20rpx;
+  margin-left: 20rpx;
+}
+.timeTv{
+  float: left;
+  width: 65%;
+  line-height: 40rpx;
+  margin-top: 20rpx;
+  margin-left: 20rpx;
+  height: 80rpx;
+  color: #777;
+}
+.shopPhoneV{
+  box-sizing: border-box;
+  float: left;
+}
+.shopPhone{
+  width: 60rpx;
+  height: 60rpx;
+  margin-top: 6rpx;
+  float: left;
+}
+.phoneTv{
+  line-height: 80rpx;
+  color: red;
+  height: 70rpx;
+  float: left;
+  font-weight: bold;
+  font-size: 26rpx;
+}
+.shopBody{
+  width: 100%;
+  height: 620rpx;
+  background-color: white;
+  margin-top: 20rpx;
+  margin-bottom: 30rpx;
+}
+.shopItemTitle{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 20rpx 0;
+  height: 40rpx;
+  font-size: 26rpx;
+}
+.shopItemTitleActive{
+  color: #EB9001;
+}
+.videoV{
+  width: 100%;
+}
+.videos{
+  width: 96%;
+  height: 500rpx;
+  margin-left: 2%;
+}
+.foodTitleV{
+  display: inline-block;
+  height: 50rpx;
+  margin-bottom: 10rpx;
+  box-sizing: border-box;
+}
+.foodTitle{
+  font-weight: bold;
+  margin-left: 20rpx;
+  display: inline-block;
+  height: 50rpx;
+  line-height: 50rpx;
+  font-size: 30rpx;
+}
+.foodItemV{
+  width: 100%;
+  height: 260rpx;
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+}
+.foodItemImg{
+  width: 44%;
+  min-width: 44%;
+  height: 210rpx;
+  margin-top: 30rpx;
+  margin-bottom: 30rpx;
+  margin-left: 20rpx;
+  border-radius: 10rpx;
+}
+.foodItemRight{
+  display: flex;
+  margin-top: 30rpx;
+  margin-left: 15rpx;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.foodItemRightName{
+  font-weight: bold;
+  line-height: 0rpx;
+}
+.foodItemRightInfo{
+  font-size: 28rpx;
+  color: #777;
+}
+.seeIcon{
+  width: 30rpx;
+  height: 20rpx;
+  margin-right: 10rpx;
+  margin-top: 6rpx;
+}
+.ov{
+  margin-right: 20rpx;
+  height: 32rpx;
+}
+.seeV{
+  display: inline-block;
+  width: 70%;
+}
+.look{
+  font-size: 24rpx;
+  color: #777;
+  vertical-align: middle;
+}
+.share{
+  width: 26rpx;
+  height: 26rpx;
+  margin-left: 40rpx;
+  margin-top: 4rpx;
+}
+.zan{
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: 40rpx;
+}
+.zanNum{
+  font-size: 28rpx;
+  color: #777;
+  margin-left: 8rpx;
+}
+.freemason{
+  width: 50rpx;
+  height: 50rpx;
+  margin-left: 20rpx;
+}
+
+.spV{
+  width: 100%;
+  height: 500rpx;
+}
+.spVv{
+  width: 32%;
+  margin-left: 1%;
+  height: 245rpx;
+  margin-top: 12rpx;
+  float: left;
+}
+.sp{
+  width: 100%;
+  height: 100%;
+  border-radius: 10rpx;
+}
+.shopDetail{
+  width: 96%;
+  margin: 10rpx auto;
+  text-indent:2rem;
+  font-size: 30rpx;
+  color: #777;
+  line-height: 50rpx;
+}

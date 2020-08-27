@@ -1,0 +1,76 @@
+/* pages/mine/mine.wxss */
+.info{
+  width: 100%;
+  height: 280rpx;
+  background-color: #EB9001
+}
+.userinfo {
+  padding-top: 35rpx;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-around;
+  line-height: 178rpx;
+}
+
+.userinfo-avatar {
+  width: 158rpx;
+  height: 158rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  font-size: 50rpx;
+}
+.menuV{
+  margin-top: 30rpx;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+.mineMenuItem{
+  width: 30%;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10rpx;
+  position: relative
+}
+.mineMenuItem .num{
+  display: inline-block;
+  padding: 3rpx 12rpx;
+  background: #EB9001;
+  position: absolute;
+  top: -10rpx;
+  right: 50rpx;
+  font-size: 20rpx;
+  color: #fff;
+  border-radius: 13rpx;
+  font-weight: 600;
+}
+.mineMenuItemIcon{
+  width: 70rpx;
+  height: 70rpx;
+}
+.Items{
+  margin-top: 50rpx;
+  font-size: 34rpx;
+  padding: 0 30rpx;
+}
+.item{
+  width: 100%;
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.tv{
+  font-size: 30rpx;
+}
+.ItemsIcon{
+  margin-top: 35rpx;
+  width: 30rpx;
+  height: 30rpx;
+}
+.line{
+  background-color: #f3f3f3;
+  height: 4rpx;
+}

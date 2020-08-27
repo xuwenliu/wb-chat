@@ -1,0 +1,12 @@
+<scroll-view class="page">
+  <topicList
+    isRefresh="{{isRefresh}}"
+    pageSize="{{pageSize}}"
+    pageNo="{{pageNo}}"
+    showTopic="true"
+    account="{{account}}"
+    listType="{{listType}}"
+    bindtellToBottom="onTellToBottom"
+    bindtellRefreshEnd="onRefreshEnd">
+  </topicList>
+</scroll-view>

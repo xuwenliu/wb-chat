@@ -1,0 +1,112 @@
+.item{
+  display: flex;
+  /* align-items: center; */
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.item .header_img{
+  width: 100rpx;
+  height: 100rpx;
+}
+.item .header_img image{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.item .userInfo{
+  width: 400rpx;
+  box-sizing: border-box;
+  padding: 0 20rpx;
+}
+.item .userInfo .title{
+  font-size: 30rpx;
+}
+.item .userInfo .desc{
+  font-size: 30rpx;
+  color: #666;
+}
+.item .userInfo .attention_no{
+  padding-top: 20rpx;
+  font-size: 30rpx;
+  color: #666;
+  /* padding-top: 30rpx; */
+}
+.item .attention{
+  margin-top: 20rpx;
+  width: 150rpx;
+  height: 100%;
+}
+.item .attention .btn{
+  font-size: 30rpx;
+  padding: 12rpx 20rpx;
+  border: 1rpx solid #ccc;
+  border-radius: 10rpx;
+  box-sizing: border-box;
+}
+.item .attention .btn.active{
+  padding: 12rpx 40rpx;
+  border: 1rpx solid #EB9001;
+  background: #EB9001;
+  color: #fff;
+}
+/*模态框*/
+.modals{
+  position:fixed; 
+  z-index: 999; 
+  top:0;
+  left: 0;
+  right:0;
+  bottom: 0;
+}
+.modals-cancel{
+  position:absolute; 
+  z-index:1000; 
+  top:0; 
+  left: 0; 
+  right:0; 
+  bottom: 0; 
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.bottom-dialog-body{
+  position:absolute; 
+  z-index:10001; 
+  bottom:0; 
+  left:0; 
+  right:0; 
+  height:200rpx; 
+  background-color: #fff;
+}
+/*动画前初始位置*/
+.bottom-pos{
+  /* -webkit-transform:translateY(100%);
+  transform:translateY(100%); */
+}
+/* 回复头部 */
+.reply .header{
+  display: flex;
+  height: 100rpx;
+  line-height: 100rpx;
+  box-shadow: 0 10rpx 10rpx #f3f3f3;
+  font-size: 30rpx;
+  text-align: center;
+}
+.reply .header .cancel{
+  color: #666;
+  width: 150rpx;
+}
+.reply .header .title{
+  flex: 1;
+  font-size: 32rpx;
+}
+.reply .header .send{
+  color: #EB9001;
+  width: 150rpx;
+}
+/* 消息输入框 */
+.messageInput{
+  width: 100%;
+  box-sizing: border-box;
+  height: 100rpx;
+  font-size: 30rpx;
+  padding: 0 30rpx;
+}

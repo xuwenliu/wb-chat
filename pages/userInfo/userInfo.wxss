@@ -1,0 +1,165 @@
+page{
+  background: #fff;
+}
+.page{
+  width: 100%;
+}
+
+/* 个人中心 */
+
+.bg_image{
+  width: 100%;
+  height: 300rpx;
+}
+.bg_image image{
+  width: 100%;
+  height: 300rpx;
+}
+.detail{
+  padding: 40rpx 30rpx;
+  background: #fafafa;
+  border-bottom: 1rpx solid #f3f3f3;
+  position: relative;
+}
+.detail .headerImg{
+  width: 180rpx;
+  height: 180rpx;
+  position: absolute;
+  top: -100rpx;
+  left: 20rpx;
+  border-radius: 50%;
+  border: 5rpx solid #fff;
+}
+.detail .d_top{
+  height: 50rpx;
+  text-align: right;
+}
+.detail .d_top view{
+  display: inline-block;
+  font-size: 30rpx;
+}
+.detail .d_top view.dt_message{
+  margin-right: 10rpx;
+  padding: 8rpx 40rpx;
+  border: 1rpx solid #ccc;
+}
+.detail .d_top view.dt_attention{
+  padding: 8rpx 80rpx;
+  border: 1rpx solid #ccc;
+  
+}
+.detail .d_top view.dt_attention.active{
+  background: #EB9001;
+  color: #fff;
+  border: 1rpx solid #EB9001;
+}
+.detail .d_center{
+  padding: 20rpx 0;
+  font-size: 40rpx;
+  font-weight: 500;
+}
+.detail .d_bottom .db_item{
+  margin-right: 10px;
+  padding-right: 30rpx;
+}
+.detail .d_bottom .db_item .num{
+  font-size: 36rpx;
+  font-weight: 600;
+}
+.detail .d_bottom .db_item .label{
+  padding-left: 10rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+/* 列表 */
+.CircleList{
+  background: white;
+  margin-bottom: 1px;
+  border-bottom: 1px solid #f3f3f3;
+}
+.CircleList:last-child{
+  border: none;
+}
+.invitation-item{
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+/* 内容 */
+.user-content{
+  display: flex;
+  font-size: 34rpx;
+  line-height: 40rpx;
+}
+
+/* 图片 */
+.photo-view{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10rpx;
+}
+.photo{
+  width: 200rpx;
+  height: 200rpx;
+  margin-right: 10rpx;
+  margin-top: 10rpx;
+}
+.photo:nth-child(3n){
+  margin-right: 0;
+}
+.photo image{
+  width: 100%;
+  height: 100%;
+}
+
+/* 地理位置 */
+.user-address-view{
+  display: flex;
+  width: 100%;
+  padding: 10rpx 0;
+  font-size: 12px;
+}
+.user-dstance{
+  font-size: 30rpx;
+  color: #666;
+}
+
+/* 时间、删除、点赞评论 */
+.TDD-view{
+  width: 100%;
+  display: flex;
+  padding-bottom: 20rpx;
+  align-items: center;
+  background: white;
+}
+.TDD-view label{
+  flex: 1;
+  font-size: 13px;
+  color: #666;
+}
+.TDD-view .item{
+  width: 80rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.TDD-view .item image{
+  width: 48rpx;
+  height: 48rpx;
+}
+
+/* 发布帖子入口 */
+.uploadInvitataion{
+  width: 80rpx;
+  height: 80rpx;
+  position: fixed;
+  bottom: 50rpx;
+  right: 30rpx;
+  z-index: 2;
+  background: #fff;
+  border-radius: 50%;
+}
+.uploadInvitataion image{
+  width: 100%;
+  height: 100%;
+}

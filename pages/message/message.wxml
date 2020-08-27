@@ -1,0 +1,67 @@
+<scroll-view class="page">
+  <view class="messageList">
+    <view 
+      class="item"
+      wx:for="{{messageList}}"
+      wx:key="item">
+        <view class="header_img">
+          <image 
+            data-userId="{{item.senderId}}"
+            bindtap="handlerLookUser" 
+            class="headerImg" 
+            src="{{item.senderIcon || '../../img/header/u3.jpg'}}">
+          </image>
+        </view>
+        <view class="userInfo">
+          <view class="title" wx:if="{{item.msgType == 1}}">{{item.senderNick}} 点赞了您的帖子</view>
+          <view class="title" wx:if="{{item.msgType == 2}}">{{item.senderNick}} 评论了您的帖子</view>
+          <view class="title" wx:if="{{item.msgType == 3}}">{{item.senderNick}} 关注了你</view>
+          <view class="desc" wx:if="{{item.msgType == 2}}">
+            {{item.content}}
+          </view>
+          <view class="attention_no">{{item.senderTime}}</view>
+        </view>
+        <view class="attention" wx:if="{{item.msgType == 2}}">
+          <view 
+            class="btn active"
+            data-dataPkId="{{item.dataPkId}}"
+            data-senderNick="{{item.senderNick}}"
+            bindtap="hanlderShowMessageDialog">
+            回复
+          </view>
+        </view>
+        <view class="attention" wx:if="{{item.msgType == 3}}">
+         <view 
+            class="btn {{!item.receiverFollowSender ? 'active' : ''}}"
+            data-isFollow="{{item.receiverFollowSender}}"
+            data-senderId="{{item.senderId}}"
+            bindtap="handlerSwitchFollow">
+               {{item.receiverFollowSender ? '已关注' : '关注'}}
+          </view>
+        </view>
+    </view>
+  </view>
+
+  <!-- 回复窗口 -->
+  <view class="modals modals-bottom-dialog" catchtouchmove="true" hidden="{{hideModal}}">
+    <view class="modals-cancel" bindtap="handlerHideMessageDialog"></view>
+    <view class="bottom-dialog-body bottom-pos reply" animation="{{animationData}}">
+      <!-- 回复头部 -->
+      <view class="header">
+        <view class="cancel" catchtap="handlerHideMessageDialog">取消</view>
+        <view class="title">正在回复 {{senderNick}}</view>
+        <view class="send" catchtap="handlerSendMessage">发送</view>
+      </view>
+      <!-- 回复textarea -->
+      <!-- <textarea
+        auto-focus
+        class="messageInput"
+        placeholder="" 
+        bindinput="handlerInputText" /> -->
+      <input
+        class="messageInput"
+        bindinput="handlerInputText" 
+        placeholder="请输入消息"/>
+    </view>
+  </view>
+</scroll-view>

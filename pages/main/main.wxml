@@ -1,0 +1,5 @@
+<!--pages/main/main.wxml-->
+<view >
+ 首页
+ <button bindtap="toDetail">点击去店铺详情</button>
+</view>

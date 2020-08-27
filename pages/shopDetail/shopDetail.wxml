@@ -1,0 +1,80 @@
+<!--pages/shopDetail/shopDetail.wxml-->
+<!--
+<text>{{s_id}}</text>
+-->
+<view class="shopHeader">
+  <view class="shopLogoV">
+    <image bindtap="previewLogo" data-src="{{shop.s_logo}}" class="shopLogo" src="{{shop.s_logo}}"></image>
+  </view>
+  <view class="shopHeaderRight">
+    <view class="shopHeaderRightTitle">
+      <text>{{shop.s_name}}</text>
+    </view>
+    <text class="shortInfo">{{shop.s_short_info}}</text>
+    <view>
+      <view class="shopHeaderBtns">
+        <button class="sub">+ 关注</button>
+        <button class="msg">私信</button>
+      </view>
+    </view>
+  </view>
+</view>
+<view>
+  <view class="map" bindtap="toMap">
+    <image class="mapIcon" src="../../img/shop/map_icon.png"></image>
+    <text class="mapTv">{{shop.s_address}}</text>
+  </view> 
+  <view class="time">
+    <view class="timeV">
+       <image class="timeIcon" src="../../img/shop/se_time_icon.png"></image>
+    </view>
+    <text class="timeTv">{{shop.s_business_time}}营业</text>
+    <view class="shopPhoneV" bindtap="call" data-phone="{{shop.s_tel}}">
+      <image class="shopPhone" src="../../img/shop/shop_phone_icon.png"></image>
+      <text class="phoneTv">电话</text>
+    </view>
+  </view> 
+</view>
+<view class="shopBody clear">
+  <view class="shopItemTitle">
+    <text class="{{showTabV?'shopItemTitleActive':''}}" bindtap="showVideo">摊位短视频</text>
+    <text class="{{showTabP?'shopItemTitleActive':''}}" bindtap="showPhoto">门店照片</text>
+    <text class="{{showTabI?'shopItemTitleActive':''}}" bindtap="showInfo">详细介绍</text>
+  </view>
+  <view class="videoV" wx:if="{{showTabV}}">
+    <view wx:if="{{shop.s_video==null}}">暂无视频数据</view>
+    <video wx:else class="videos" object-fit="cover" custom-cache="false" src="{{shop.s_video}}"></video>
+  </view>
+  <view class="videoV" wx:if="{{showTabP}}">
+     <view class="spV">
+        <view class="spVv" wx:for="{{shop.shopPhotos}}">
+          <image class="sp" bindtap="preview" data-src="{{item.sp_img}}" src="{{item.sp_img}}"></image>
+        </view>
+     </view>
+  </view>
+  <view class="videoV" wx:if="{{showTabI}}">
+    <view class="shopDetail">{{shop.s_info}}</view>
+  </view>
+</view>
+<view class="foodV">
+  <view class="foodTitleV">
+    <image class="freemason fl" src="../../img/food/freemason.png"></image>
+    <text class="foodTitle fl">热销商品</text>
+  </view>
+  <view class="foodItemV" wx:for="{{goods}}">
+    <image class="foodItemImg" src="{{item.g_img}}"></image>
+    <view class="foodItemRight">
+      <text class="foodItemRightName">{{item.g_name}}</text>
+      <text class="foodItemRightInfo">{{item.g_info}}</text>
+      <view class="ov">
+        <image class="seeIcon fl" src="../../img/food/see.png"></image>
+        <text class="look fl">{{item.g_look}}人看过</text>
+        <text class="zanNum fr">{{item.g_zan}}</text>
+        <image class="zan fr" src="../../img/food/zan_icon.png"></image>
+        <image class="share fr" src="../../img/food/share_icon.png"></image>
+      </view>
+    </view>
+    <view class="bos"></view>
+  </view>
+  
+</view>

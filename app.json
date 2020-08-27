@@ -1,0 +1,65 @@
+{
+  "pages": [
+    "pages/square/square",
+    "pages/main/main",
+    "pages/index/index",
+    "pages/activity/activity",
+    "pages/chat/chat",
+    "pages/mine/mine",
+    "pages/logs/logs",
+    "pages/sendTopic/sendTopic",
+    "pages/userList/userList",
+    "pages/topicList/topicList",
+    "pages/userInfo/userInfo",
+    "pages/shopDetail/shopDetail",
+    "pages/message/message",
+    "pages/chatList/chatList",
+    "pages/blankList/blankList"
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#EB9001",
+    "navigationBarTitleText": "溜夜市",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/main/main",
+        "iconPath": "img/icon/home_normal.png",
+        "selectedIconPath": "img/icon/home_selected.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/activity/activity",
+        "iconPath": "img/icon/activity_normal.png",
+        "selectedIconPath": "img/icon/acitivity_selected.png",
+        "text": "活动"
+      },
+      {
+        "pagePath": "pages/square/square",
+        "iconPath": "img/icon/txt_normal.png",
+        "selectedIconPath": "img/icon/txt_selected.png",
+        "text": "广场"
+      },
+      {
+        "pagePath": "pages/chatList/chatList",
+        "iconPath": "img/icon/chat_normal.png",
+        "selectedIconPath": "img/icon/chat_selected.png",
+        "text": "聊天"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "img/icon/mine_normal.png",
+        "selectedIconPath": "img/icon/mine_selected.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

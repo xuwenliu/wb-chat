@@ -1,0 +1,48 @@
+<scroll-view class="page">
+  <!-- 个人中心 -->
+  <view class="userInfo">
+    <view class="bg_image">
+      <image mode="aspectFill" src="../../img/userInfo/header_bg.jpg"></image>
+    </view>
+    <view class="detail">
+      <image class="headerImg" src="{{userInfo.icon || '../../img/header/u3.jpg'}}"></image>
+      <view class="d_top">
+        <view bindtap="chat" class="dt_message">私信</view>
+        <view 
+          wx:if="{{account != userInfo.userId}}"
+          class="{{userInfo.curUserIsFollow ? 'dt_attention' : 'dt_attention active'}}"
+          data-isFollow="{{userInfo.curUserIsFollow}}"
+          bindtap="handlerSwitchFollow">
+            {{userInfo.curUserIsFollow ? '已关注' : '关注'}}
+        </view>
+      </view>
+      <view class="d_center">{{userInfo.nick}}</view>
+      <view class="d_bottom">
+        <text class="db_item" bindtap="handlerLookFans">
+          <text class="num">{{userInfo.followMeCount}}</text>
+          <text class="label">粉丝</text>
+        </text>
+        <text class="db_item">
+          <text class="num">{{userInfo.topicPraiseCount}}</text>
+          <text class="label">获赞</text>
+        </text>
+        <text class="db_item" bindtap="handlerLookMeFollow">
+          <text class="num">{{userInfo.followCount}}</text>
+          <text class="label">关注</text>
+        </text>
+      </view>
+    </view>
+  </view>
+  <!-- 帖子列表 -->
+  <topicList
+    isRefresh="{{isRefresh}}"
+    pageSize="{{pageSize}}"
+    pageNo="{{pageNo}}"
+    userId="{{userId}}"
+    listType="1"
+    account="{{account}}"
+    showTopic="{{showTopic}}"
+    bindtellToBottom="onTellToBottom"
+    bindtellRefreshEnd="onRefreshEnd">
+  </topicList>
+</scroll-view>

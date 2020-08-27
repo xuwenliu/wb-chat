@@ -1,0 +1,28 @@
+/* pages/chat/chat.wxss */
+
+@import "./main.wxss";
+@import "./icon.wxss";
+
+
+
+.solid-bottom {
+    width: 76vw;
+    height: 9.33vw;
+    background-color: #fff;
+    border-radius: 40rpx;
+    margin-left: 2vw;
+    padding: 0 3vw;
+    font-size: 28rpx;
+    color: #444;
+    border: 1px solid #ccc;
+}
+.cu-bar.input .action.file{
+    margin: 0;
+}
+
+.add-black-list{
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    z-index: 9999;
+}

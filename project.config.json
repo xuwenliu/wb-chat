@@ -1,0 +1,126 @@
+{
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"enhance": false,
+		"postcss": true,
+		"preloadBackgroundData": false,
+		"minified": true,
+		"newFeature": true,
+		"coverView": true,
+		"nodeModules": true,
+		"autoAudits": false,
+		"showShadowRootInWxmlPanel": true,
+		"scopeDataCheck": false,
+		"uglifyFileName": false,
+		"checkInvalidKey": true,
+		"checkSiteMap": true,
+		"uploadWithSourceMap": true,
+		"babelSetting": {
+			"ignore": [],
+			"disablePlugins": [],
+			"outputPath": ""
+		},
+		"useCompilerModule": false,
+		"userConfirmedUseCompilerModuleSwitch": false,
+		"compileHotReLoad": false,
+		"useIsolateContext": true
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.11.1",
+	"appid": "wx893481359fd419db",
+	"projectname": "wxTan",
+	"debugOptions": {
+		"hidedInDevtools": []
+	},
+	"isGameTourist": false,
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"gamePlugin": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": -1,
+			"list": [
+				{
+					"id": 0,
+					"name": "pages/mine/mine",
+					"pathName": "pages/mine/mine",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/activity/activity",
+					"pathName": "pages/activity/activity",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/shopDetail/shopDetail",
+					"pathName": "pages/shopDetail/shopDetail",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/addShopKeeper/addShopKeeper",
+					"pathName": "pages/addShopKeeper/addShopKeeper",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "pages/addShopKeeper/addShopKeeper",
+					"pathName": "pages/addShopKeeper/addShopKeeper",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 5,
+					"name": "聊天页",
+					"pathName": "pages/chat/chat",
+					"query": "userId=bf955556d41c11eaaa24525400d73870&avatar= https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKXv0quFw46w8ZdYtiaicfNtH3FFWRftgoGAN4nOaLBvqRNYib2WEE7Fr3gzQfmicQ5MrUMrmxIb9Mp8Q/132",
+					"scene": null
+				},
+				{
+					"id": 6,
+					"name": "聊天会话列表",
+					"pathName": "pages/chatList/chatList",
+					"query": "userId=bf955556d41c11eaaa24525400d73870&avatar= https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKXv0quFw46w8ZdYtiaicfNtH3FFWRftgoGAN4nOaLBvqRNYib2WEE7Fr3gzQfmicQ5MrUMrmxIb9Mp8Q/132",
+					"scene": null
+				},
+				{
+					"id": 7,
+					"name": "黑名单列表",
+					"pathName": "pages/blankList/blankList",
+					"query": "",
+					"scene": null
+				}
+			]
+		}
+	}
+}

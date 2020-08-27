@@ -1,0 +1,30 @@
+<scroll-view class="page">
+  <view class="userList">
+    <view 
+      class="item"
+      wx:for="{{userList}}"
+      wx:for-item="item"
+      wx:key="item">
+        <view class="header_img">
+          <image 
+            data-userId="{{item.userId}}"
+            bindtap="handlerLookUser" 
+            class="headerImg" 
+            src="{{item.icon || '../../img/header/u3.jpg'}}">
+          </image>
+        </view>
+        <view class="userInfo">
+          <view class="title">{{item.nick}}</view>
+          <view class="attention_no">粉丝数：{{item.followMeCount || 0}}</view>
+        </view>
+        <view 
+          wx:if="{{item.userId != account}}"
+          class="attention"
+          data-userId="{{item.userId}}"
+          data-isFollow="{{item.curUserIsFollow}}"
+          bindtap="handlerSwitchFollow">
+          <text class="btn {{item.curUserIsFollow ? '' : 'active'}}">{{item.curUserIsFollow ? '已关注' : '关注'}}</text>
+        </view>
+    </view>
+  </view>
+</scroll-view>

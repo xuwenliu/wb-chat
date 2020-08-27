@@ -1,0 +1,58 @@
+<view class='page'>
+  <!-- 文本输入框 -->
+	<textarea 
+    class='text'
+    placeholder="分享动态..." 
+    bindinput="handlerInput"
+    auto-height />
+  <!-- 上传图片 -->
+	<view class="image_content">
+    <view 
+      class='moment image_item' 
+      wx:for="{{img_url}}"
+      wx:key="index">
+        <image 
+          mode="aspectFill" 
+          class="moment_img" 
+          src="{{item}}"
+          data-index="{{index}}"
+          bindtap="LookPhoto">
+        </image>
+        <image 
+          class="delete" 
+          src="../../img/sq/delete.png" 
+          data-index="{{index}}" 
+          bindtap="handlerReomveImg">
+        </image>
+    </view>
+    <view 
+      wx:if="{{img_url.length < 9}}"
+      class='upload image_item'
+      bindtap="chooseimage" >
+        <image 
+          class="upload_img" 
+          src='../../img/si/upload.png'>
+        </image>
+    </view>
+  </view>
+  <view class="location">
+    <view class="label">显示定位</view>
+    <view class="right">
+      <switch
+        color="#EB9001"
+        checked="{{locFlag}}" 
+        bindchange="handlerLocFlag"/>
+    </view>
+  </view>
+  <!-- 分类picker -->
+  <picker 
+    bindchange="bindPickerChange" 
+    value="{{index}}" 
+    range="{{classifyList}}">
+      <view class="classify">
+        <view class="label">请选择分类：</view>
+        <view class="classifyPick">{{classifyName}}</view>
+      </view>
+  </picker>
+  <button type="default" bindtap="handlerSendTopic">发布</button>
+</view>
