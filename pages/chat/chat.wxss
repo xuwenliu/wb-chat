@@ -3,26 +3,222 @@
 @import "./main.wxss";
 @import "./icon.wxss";
 
+.cu-chat .cu-item > .main.location {
+  width: 600rpx;
+}
 
+.cu-chat .cu-item > .main .text-content {
+  padding: 20rpx;
+  border-radius: 6rpx;
+  max-width: 100%;
+  font-size: 30rpx;
+  position: relative;
+  min-height: 80rpx;
+  line-height: 40rpx;
+  text-align: left;
+}
+.cu-chat .cu-item > .main .text-content .emoji {
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+.cu-chat .cu-item > .main .text-content .text {
+  word-break: break-all;
+}
 
+.cu-chat .cu-item > .main.location .content {
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+}
+.cu-chat .cu-item > .main.location .content .address {
+  max-width: 400rpx;
+  margin-bottom: 5px;
+}
+.cu-chat .cu-item > .main.location .map {
+  width: 100%;
+  height: 200rpx;
+}
+
+.cu-bar.bottom {
+  display: block;
+  padding-right: 0;
+}
 .solid-bottom {
-    width: 76vw;
-    height: 9.33vw;
-    background-color: #fff;
-    border-radius: 40rpx;
-    margin-left: 2vw;
-    padding: 0 3vw;
-    font-size: 28rpx;
-    color: #444;
-    border: 1px solid #ccc;
+  width: 76vw;
+  height: 9.33vw;
+  background-color: #fff;
+  border-radius: 40rpx;
+  margin-left: 2vw;
+  padding: 0 3vw;
+  font-size: 28rpx;
+  color: #444;
+  border: 1px solid #ccc;
 }
-.cu-bar.input .action.file{
-    margin: 0;
+.record {
+  width: 100%;
+  background-color: #fff;
+  color: #495060;
+  border-radius: 6px;
+  box-sizing: border-box;
+  height: 34px;
+  line-height: 34px;
+  display: flex;
+  justify-content: center;
 }
 
-.add-black-list{
-    position: fixed;
-    right: 10px;
-    top: 10px;
-    z-index: 9999;
+.cu-bar.bottom .bottom-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100rpx;
+  padding-right: 20rpx;
+}
+
+.cu-bar.input .send-btn {
+  margin-left: 20rpx;
+}
+
+.cu-bar.input .more {
+  margin-right: 0;
+}
+.cu-bar.input .face {
+  margin-left: 0;
+}
+
+.add-black-list {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  z-index: 9999;
+}
+
+.record-modal {
+  height: 150px;
+  width: 60vw;
+  background-color: black;
+  opacity: 0.8;
+  position: fixed;
+  top: 200px;
+  z-index: 9999;
+  left: 20vw;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.record-modal .wrapper {
+  display: flex;
+  height: 100px;
+  box-sizing: border-box;
+  padding: 10vw;
+}
+.record-modal .wrapper .modal-loading {
+  opacity: 1;
+  width: 20px;
+  height: 8px;
+  border-radius: 2px;
+  background-color: #006fff;
+  animation: loading 2s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+}
+
+.record-modal .modal-title {
+  text-align: center;
+  color: #fff;
+}
+.modal-display {
+  display: none;
+}
+@-webkit-keyframes loading {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30vw, 0);
+    background-color: #f5634a;
+    width: 40px;
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* emoji */
+.bottom-emoji {
+  position: relative;
+}
+.bottom-emoji:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 200%;
+  height: 200%;
+  border-top: 1rpx solid #ddd;
+  border-radius: inherit;
+  content: " ";
+  transform: scale(0.5);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.bottom-emoji .emojis {
+  height: 150px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+.bottom-emoji .emojis .emoji {
+  height: 12.5vw;
+  width: 12.5vw;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* 更多 */
+.bottom-image {
+  box-sizing: border-box;
+  position: relative;
+}
+.bottom-image:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 200%;
+  height: 200%;
+  border-top: 1rpx solid #ddd;
+  border-radius: inherit;
+  content: " ";
+  transform: scale(0.5);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.bottom-image .images {
+  height: 150px;
+  box-sizing: border-box;
+  display: flex;
+  padding: 0 12px;
+  align-items: flex-start;
+}
+
+.bottom-image .images .block {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 25%;
+  margin-top: 10px;
+}
+
+.bottom-image .images .block .icon {
+  font-size: 40px;
+}
+.bottom-image .images .block .name {
+  font-size: 12px;
+  text-align: center;
 }

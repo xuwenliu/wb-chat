@@ -1,8 +1,9 @@
 /*eslint-disable*/
-import LibGenerateTestUserSig from './lib-generate-test-usersig-es.min.js'
+import LibGenerateTestUserSig from "./lib-generate-test-usersig-es.min.js";
 
-const _SDKAPPID = 0;
-const _SECRETKEY = '';
+const _SDKAPPID = 1400419487;
+const _SECRETKEY =
+  "1358acced6d2ae255177cdc29d68dfa48635d351d623ec4715b01b5e296fdb6c";
 /*
  * Module:   GenerateTestUserSig
  *
@@ -37,7 +38,6 @@ function genTestUserSig(userID) {
    */
   var EXPIRETIME = 604800;
 
-
   /**
    * 计算签名用的加密密钥，获取步骤如下：
    *
@@ -54,11 +54,8 @@ function genTestUserSig(userID) {
   var userSig = generator.genTestUserSig(userID);
   return {
     sdkappid: SDKAPPID,
-    userSig: userSig
+    userSig: userSig,
   };
 }
 
-export {
-  _SDKAPPID as SDKAPPID,
-  genTestUserSig
-}
+export { _SDKAPPID as SDKAPPID, genTestUserSig };

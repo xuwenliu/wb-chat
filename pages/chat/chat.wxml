@@ -1,86 +1,92 @@
 <!-- pages/chat/chat.wxml -->
-<view class="cu-chat">
+<view class="cu-chat" bind:longpress="handleLongPress" bind:touchmove="handleTouchMove" bind:touchend="handleTouchEnd">
+    <view class="{{isRecording ? 'record-modal' : 'record-modal modal-display'}}">
+        <view class="wrapper">
+            <view class="modal-loading"></view>
+        </view>
+        <view class="modal-title">{{title}}</view>
+    </view>
     <view class="add-black-list">
         <button bindtap="addBlackList" class="cu-btn bg-black shadow round">加入黑名单</button>
     </view>
     <scroll-view scroll-y scroll-into-view='{{toView}}' style='height: {{scrollHeight}};'>
         <!-- <view class='scrollMsg'> -->
-        <block wx:key wx:for='{{msgList}}' wx:for-index="index">
-            <!-- 文本 -->
-            <view id='msg-{{index}}' class="cu-item">
-                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+        <block wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
+            <!-- 文本+emoji  message.flow === 'out' 自己发送的消息 -->
+            <view wx:if="{{message.type === 'TIMTextElem'}}" id='msg-{{index}}' class="{{message.flow === 'out'?'cu-item self':'cu-item'}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
                 <view class="main">
-                    <view class="content shadow">
-                        <text>喵喵喵！喵喵喵！</text>
+                    <view class="{{message.flow === 'out'?'text-content shadow bg-green':'text-content shadow'}}">
+                        <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="{{message.ID}}">
+                            <text class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</text>
+                            <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
+                        </block>
                     </view>
                 </view>
-                <view class="date ">13:23</view>
-            </view>
-            <view id='msg-{{index}}' class="cu-item self">
-                <view class="main">
-                    <view class="content bg-green shadow">
-                        <text>喵喵喵！喵喵喵！喵喵喵！喵喵！喵喵！！喵！喵喵喵！</text>
-                    </view>
-                </view>
-                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-                <view class="date">2018年3月23日 13:23</view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <!-- <view class="date">13:23</view> -->
             </view>
             <!-- 图片 -->
-            <view id='msg-{{index}}' class="cu-item">
-                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-                <view class="main">
-                    <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix"></image>
+            <view wx:if="{{message.type === 'TIMImageElem'}}" id='msg-{{index}}' class="{{message.flow === 'out'?'cu-item self':'cu-item'}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view bindtap="previewImage" data-image="{{message.payload.imageInfoArray[1].url}}" class="main">
+                    <image src="{{message.payload.imageInfoArray[1].url}}" class="radius" mode="widthFix"></image>
                 </view>
-                <view class="date">13:23</view>
-            </view>
-            <view id='msg-{{index}}' class="cu-item self">
-                <view class="main">
-                    <image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" class="radius" mode="widthFix"></image>
-                </view>
-                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-                <view class="date">13:23</view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <!-- <view class="date">13:23</view> -->
             </view>
             <!-- 语音 -->
             <view id='msg-{{index}}' class="cu-item">
                 <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
                 <view class="main">
                     <view class="content shadow">
-                        <text class="cuIcon-sound text-xxl padding-right-xl"></text>
+                        <text class="cuIcon-sound text-xxl padding-right-sm"></text>
                     </view>
-                    <view class="action text-bold text-grey">3"</view>
+                    <view class="action text-bold text-black">3"</view>
                 </view>
                 <view class="date">13:23</view>
             </view>
             <view id='msg-{{index}}' class="cu-item self">
                 <view class="main">
-                    <view class="action text-bold text-grey">3"</view>
+                    <view class="action text-bold text-black">3"</view>
                     <view class="content shadow">
-                        <text class="cuIcon-sound text-xxl padding-right-xl"></text>
+                        <text class="cuIcon-sound text-xxl padding-right-sm"></text>
                     </view>
                 </view>
                 <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
                 <view class="date">13:23</view>
+            </view>
+            <!-- 视频 -->
+            <view id='msg-{{index}}' class="cu-item">
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <video src="http://img.blog.fandong.me/2017-08-26-Markdown-Advance-Video.mp4" class="video" poster="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" object-fit="contain" bind:error="videoError"></video>
+                </view>
+            </view>
+            <view id='msg-{{index}}' class="cu-item self">
+                <view class="main">
+                    <video src="http://img.blog.fandong.me/2017-08-26-Markdown-Advance-Video.mp4" class="video" poster="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg" object-fit="contain" bind:error="videoError"></video>
+                </view>
+                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
             </view>
             <!-- 位置 -->
             <view id='msg-{{index}}' class="cu-item">
                 <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-                <view class="main">
-                    <view class="content shadow">喵星球，喵喵市</view>
-                    <view class="action">
-                        <text class="cuIcon-locationfill text-orange text-xxl"></text>
+                <view class="main location">
+                    <view bindtap="viewLocation" data-longitude="{{location.longitude}}" data-latitude="{{location.latitude}}" data-address="{{location.address}}" class="content shadow">
+                        <text class="text-cut address">{{location.address}}</text>
+                        <map bindtap="viewLocation" data-longitude="{{location.longitude}}" data-latitude="{{location.latitude}}" data-address="{{location.address}}" id="hbkMap" scale="{{30}}" enable-zoom="{{false}}" enable-scroll="{{false}}" class="map" longitude="{{location.longitude}}" latitude="{{location.latitude}}" markers="{{location.markers}}"></map>
                     </view>
                 </view>
-                <view class="date">13:23</view>
             </view>
             <view id='msg-{{index}}' class="cu-item self">
-                <view class="main">
-                    <view class="action">
-                        <text class="cuIcon-locationfill text-orange text-xxl"></text>
+                <view class="main location">
+                    <view bindtap="viewLocation" data-longitude="{{location.longitude}}" data-latitude="{{location.latitude}}" data-address="{{location.address}}" class="content shadow">
+                        <text class="text-cut address">{{location.address}}</text>
+                        <map bindtap="viewLocation" data-longitude="{{location.longitude}}" data-latitude="{{location.latitude}}" data-address="{{location.address}}" id="hbkMap" scale="{{30}}" enable-zoom="{{false}}" enable-scroll="{{false}}" class="map" longitude="{{location.longitude}}" latitude="{{location.latitude}}" markers="{{location.markers}}"></map>
                     </view>
-                    <view class="content shadow">喵星球，喵喵市</view>
                 </view>
-                <view class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-                <view class="date">13:23</view>
+                <view class="cu-avatar round" style="background-image:url({{avatar}});"></view>
             </view>
             <!-- 单个消息1 客服发出（左） -->
             <!-- <view wx:if='{{item.speaker=="server"}}' id='msg-{{index}}' style='display: flex; padding: 2vw 11vw 2vw 2vw;'>
@@ -107,17 +113,54 @@
         <!-- 占位 -->
         <view style='width: 100%; height: 18vw;'></view>
     </scroll-view>
-    <view class="cu-bar foot input {{inputBottom!=0?'cur':''}}" style="bottom:{{inputBottom}}">
-        <view class="action">
-            <text class="cuIcon-sound text-grey"></text>
+    <view class="bottom cu-bar foot input {{inputBottom!=0?'cur':''}}" style="bottom:{{inputBottom}}">
+        <view class="bottom-view" style="marginBottom:{{isFocus ? '10px' : 0}}">
+            <view class="action" bindtap="chooseRecord">
+                <text class="{{!isRecord ? 'cuIcon-sound text-black' : 'cuIcon-voice text-black'}}"></text>
+            </view>
+            <input hidden="{{isRecord}}" class="solid-bottom" bindconfirm='sendMessage' bindinput="contentChange" adjust-position='{{false}}' value='{{messageContent}}' confirm-type='send' focus="{{isFocus}}" bindfocus='focus' bindblur='blur' maxlength="300" cursor-spacing="10"></input>
+            <!-- 录音 -->
+            <view class="record" id="say0" hidden="{{!isRecord}}">
+                <text id="say1" wx:if="{{!isRecording}}">按住 说话</text>
+                <text id="say2" wx:if="{{isRecording}}">抬起 停止</text>
+            </view>
+            <!-- 表情 -->
+            <view class="action face" bindtap="handleEmoji">
+                <text class="cuIcon-emoji text-black"></text>
+            </view>
+            <!-- 发送 -->
+            <button bindtap="sendMessage" wx:if="{{messageContent.length !== 0}}" class="cu-btn bg-green shadow sm send-btn">
+                发送
+            </button>
+            <!-- 更多 -->
+            <view bindtap="handleMore" wx:else class="action more">
+                <text class="cuIcon-roundadd text-black"></text>
+            </view>
         </view>
-        <input class="solid-bottom" bindconfirm='sendClick' adjust-position='{{false}}' value='{{inputVal}}' confirm-type='send' bindfocus='focus' bindblur='blur' maxlength="300" cursor-spacing="10"></input>
-        <view class="action">
-            <text class="cuIcon-emojifill text-grey"></text>
+        <!-- emoji部分 -->
+        <view class="bottom-emoji" wx:if="{{isEmojiOpen}}">
+            <view class="emojis">
+                <view wx:for="{{emojiName}}" wx:for-index="index3" wx:for-item="emojiItem" class="emoji" wx:key="emojiItem" data-emoji="{{emojiItem}}" bindtap="chooseEmoji">
+                    <image src="{{emojiUrl + emojiMap[emojiItem]}}" style="width:100%;height:100%" />
+                </view>
+            </view>
         </view>
-        <view class="action file">
-            <text class="cuIcon-roundadd text-grey"></text>
+        <!-- 更多部分 -->
+        <view class="bottom-image" wx:if="{{isMoreOpen}}">
+            <view class="images">
+                <view class="block" bindtap="sendPhoto">
+                    <text class="cuIcon-pic icon text-black"></text>
+                    <view class="name text-black">图片</view>
+                </view>
+                <view class="block" bindtap="sendVideo">
+                    <text class="cuIcon-record icon text-black"></text>
+                    <view class="name text-black">视频</view>
+                </view>
+                <view class="block" bindtap="sendLocation">
+                    <text class="cuIcon-location icon text-black"></text>
+                    <view class="name text-black">位置</view>
+                </view>
+            </view>
         </view>
-        <!-- <button class="cu-btn bg-green shadow">发送</button> -->
     </view>
 </view>
