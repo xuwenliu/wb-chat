@@ -1,5 +1,3 @@
-// pages/blankList/blankList.js
-
 import { Chat } from "../chat/init";
 const app = getApp();
 let that = null;
@@ -47,10 +45,9 @@ Page({
   },
   watch: {
     isSDKReady(newValue) {
-      if (!newValue) {
-        return;
+      if (newValue) {
+        that.getUserList();
       }
-      that.getUserList();
     },
   },
 
@@ -91,7 +88,7 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload() {
     wx.tim.logout().then((imResponse) => {
       console.log("退出成功");
     });

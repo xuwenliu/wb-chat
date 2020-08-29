@@ -1,38 +1,42 @@
 <!-- pages/chatList/chatList.wxml -->
 <view class="cu-list menu-avatar">
-     <view class="jump-black-list">
+    <view class="jump-black-list">
         <button bindtap="jumpBlackList" class="cu-btn bg-black shadow round">黑名单</button>
     </view>
     <view class="cu-item ">
-        <view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);">
-            <view class="cu-tag badge">99+</view>
-        </view>
+        <view class="cu-avatar radius lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
         <view class="content">
             <view class="text-pink">
                 <text class="text-cut">莫甘娜</text>
             </view>
             <view class="text-gray text-sm flex">
-                <text class="text-cut">凯尔，你被自己的光芒变的盲目！凯尔，你被自己的光芒变的盲目！凯尔，你被自己的光芒变的盲目！</text>
+                <text class="text-cut">12345</text>
             </view>
         </view>
         <view class="action">
             <view class="text-grey text-xs">22:20</view>
+            <view class="cu-tag round bg-red sm">5</view>
         </view>
     </view>
-    <view class="cu-item ">
-        <view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);">
-            <view class="cu-tag badge">99+</view>
-        </view>
-        <view class="content">
-            <view class="text-pink">
-                <text class="text-cut">莫甘娜</text>
+    <block wx:for="{{conversationList}}">
+        <view wx:if="{{item.type === 'C2C'}}" class="cu-item">
+            <view class="cu-avatar radius lg" style="background-image:url({{item.userProfile.avatar}});"></view>
+            <view class="content">
+                <view class="text-pink">
+                    <text class="text-cut">{{item.userProfile.nick}}</text>
+                </view>
+                <view class="text-gray text-sm flex">
+                    <text wx:if="{{!item.lastMessage.isRevoked}}" class="text-cut">
+                        {{item.lastMessage.messageForShow}}
+                    </text>
+                </view>
             </view>
-            <view class="text-gray text-sm flex">
-                <text class="text-cut">凯尔，你被自己的光芒变的盲目！凯尔，你被自己的光芒变的盲目！凯尔，你被自己的光芒变的盲目！</text>
+            <view class="action">
+                <view class="text-grey text-xs">{{item.lastMessage._lastTime}}</view>
+                <view class="cu-tag round bg-red sm" wx:if="{{item.unreadCount > 0}}">
+                    <text>{{item.unreadCount > 99 ? '99+':item.unreadCount}}</text>
+                </view>
             </view>
         </view>
-        <view class="action">
-            <view class="text-grey text-xs">22:20</view>
-        </view>
-    </view>
+    </block>
 </view>

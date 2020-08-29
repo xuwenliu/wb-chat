@@ -1,5 +1,3 @@
-// pages/chat/chat.js
-import { genTestUserSig } from "../../sdk/GenerateTestUserSig";
 import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
 import config from "../../utils/config";
 import QQMapWX from "../../utils/qqmap-wx-jssdk.min";
