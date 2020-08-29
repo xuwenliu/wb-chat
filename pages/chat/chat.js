@@ -1,19 +1,13 @@
-import {
-  emojiName,
-  emojiMap,
-  emojiUrl
-} from "./emojiMap";
+import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
 import config from "../../utils/config";
 import QQMapWX from "../../utils/qqmap-wx-jssdk.min";
-import {
-  Chat
-} from "./init";
-import {
-  decodeElement
-} from "./decodeElement";
+import { Chat } from "./init";
+import { decodeElement } from "./decodeElement";
+import { throttle } from "../../utils/util";
 
 let qqmapsdk;
 const app = getApp();
+let that = null;
 
 let windowWidth = wx.getSystemInfoSync().windowWidth;
 let windowHeight = wx.getSystemInfoSync().windowHeight;
@@ -31,7 +25,13 @@ const recordOptions = {
 
 Page({
   data: {
+    isShow: false,
     isSDKReady: false,
+    currentConversationID: "",
+    nextReqMessageID: "",
+    isCompleted: false, // 当前会话消息是否已经请求完毕
+    isLoading: false, // 是否正在请求
+
     userId: "", //发给谁的userId
     avatar: "", // 发送给谁的头像
     msgList: [],
@@ -71,27 +71,26 @@ Page({
         return;
       }
       wx.hideLoading();
-      wx.tim
-        .updateMyProfile({
-          nick: app.globalData.userInfo.nickName,
-          avatar: app.globalData.userInfo.avatarUrl,
-        })
+      wx.tim.updateMyProfile({
+        nick: app.globalData.userInfo.nickName,
+        avatar: app.globalData.userInfo.avatarUrl,
+      });
+      that.getMessageList();
+      that.scrollToBottom();
     },
   },
 
   onLoad(options) {
-
-    const {
-      userId,
-      avatar
-    } = options;
-
+    that = this;
+    const { userId, avatar, currentConversationID } = options;
 
     this.setData({
       avatar,
       userId,
       cusHeadIcon: app.globalData.userInfo.avatarUrl,
       toView: "msg-" + (this.data.msgList.length - 1),
+      currentConversationID,
+      nextReqMessageID: "", // 第一次没有下一个
     });
 
     // 用户地址解析
@@ -144,14 +143,14 @@ Page({
         }
       }
     });
-
-
   },
   onShow() {
+    this.setData({ isShow: true });
+
     if (!this.data.isSDKReady) {
       wx.showLoading({
         title: "正在同步数据",
-        mask: true
+        mask: true,
       });
     }
     app.setWatcher(this.data, this.watch); // 设置监听
@@ -162,9 +161,15 @@ Page({
   onUnload() {
     // 从聊天列表进来则返回就不退出登录
     // 从私信进来则返回要退出登录
-    if (app.globalData.pageName !== 'chatList') {
+    if (app.globalData.pageName !== "chatList") {
       wx.tim.logout();
     }
+    this.setData({
+      isShow: false,
+    });
+  },
+  onPullDownRefresh() {
+    throttle(this.getMessageList, 1000)();
   },
 
   // 监听消息接收
@@ -173,6 +178,89 @@ Page({
     this.sendMessageToView(event.data[0]);
   },
 
+  // 滚动到列表bottom
+  scrollToBottom() {
+    let query = wx.createSelectorQuery();
+    let that = this;
+    query
+      .select("#chat")
+      .boundingClientRect(function (res) {
+        if (res.bottom - windowHeight < 200) {
+          if (that.data.isShow) {
+            wx.pageScrollTo({
+              scrollTop: 99999,
+            });
+          }
+        }
+      })
+      .exec();
+
+    let interval = setInterval(() => {
+      if (this.data.msgList.length !== 0) {
+        if (this.data.isShow) {
+          wx.pageScrollTo({
+            scrollTop: 99999,
+          });
+        }
+        clearInterval(interval);
+      }
+    }, 600);
+  },
+
+  unshiftMessageList(messageList) {
+    let list = [...messageList];
+    for (let i = 0; i < list.length; i++) {
+      let message = list[i];
+      list[i].virtualDom = decodeElement(message);
+      // let date = new Date(message.time * 1000)
+      // list[i].newtime = formatTime(date)
+    }
+    return [...list];
+  },
+
+  // 获取消息列表
+  getMessageList() {
+    // 判断是否拉完了，isCompleted 的话要报一下没有更多了
+    if (!this.data.isCompleted) {
+      // 如果请求还没回来，又拉，此时做一下防御
+      if (!this.data.isLoading) {
+        this.setData({
+          isLoading: true,
+        });
+        wx.tim
+          .getMessageList({
+            conversationID: this.data.currentConversationID,
+            nextReqMessageID: this.data.nextReqMessageID,
+            count: 15,
+          })
+          .then((res) => {
+            console.log("------", res);
+            this.sendMessageToView(res.data.messageList);
+            this.setData({
+              isCompleted: res.data.isCompleted,
+              nextReqMessageID: res.data.nextReqMessageID,
+              isLoading: false,
+            });
+            wx.stopPullDownRefresh();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        wx.showToast({
+          title: "你拉的太快了",
+          icon: "none",
+          duration: 500,
+        });
+      }
+    } else {
+      wx.showToast({
+        title: "没有更多啦",
+        icon: "none",
+        duration: 1500,
+      });
+    }
+  },
 
   /**
    * 获取聚焦
@@ -583,11 +671,7 @@ Page({
 
   // 位置预览
   viewLocation(e) {
-    const {
-      latitude,
-      longitude,
-      address
-    } = e.currentTarget.dataset;
+    const { latitude, longitude, address } = e.currentTarget.dataset;
     wx.openLocation({
       latitude: +latitude,
       longitude: +longitude,
@@ -614,10 +698,17 @@ Page({
 
   // 发送消息到页面上
   sendMessageToView(message) {
-    message.virtualDom = decodeElement(message);
-    this.setData({
-      msgList: [...this.data.msgList, message],
-    });
+    if (Array.isArray(message)) {
+      this.setData({
+        msgList: [...this.unshiftMessageList(message), ...this.data.msgList],
+      });
+    } else {
+      message.virtualDom = decodeElement(message);
+      this.setData({
+        msgList: [...this.data.msgList, message],
+      });
+      this.scrollToBottom();
+    }
   },
 
   // 加入黑名单

@@ -110,9 +110,43 @@ const filterDate = (date, fmt = "YYYY-MM-DD HH:mm") => {
   }
   return fmt;
 };
+export function throttle(func, wait) {
+  let timeout;
+  return function () {
+    let that = this;
+    let args = arguments;
+
+    if (!timeout) {
+      timeout = setTimeout(function () {
+        timeout = null;
+        func.apply(that, args);
+      }, wait);
+    }
+  };
+}
+export function formatDuration(time) {
+  let interval = time;
+  let continued = "";
+  if (interval > 3600) {
+    const hour = Math.floor(interval / 3600);
+    continued += hour + "小时";
+    interval -= hour * 3600;
+  }
+  if (interval > 60 && interval < 3600) {
+    const min = Math.floor(interval / 60);
+    continued += min + "分";
+    interval -= min * 60;
+  }
+  if (interval < 60) {
+    continued += Math.floor(interval) + "秒";
+  }
+  return continued;
+}
 
 module.exports = {
   formatTime: formatTime,
   filterDate: filterDate,
+  throttle: throttle,
+  formatDuration: formatDuration,
   getDistance: getDistance,
 };

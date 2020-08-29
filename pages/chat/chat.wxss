@@ -2,6 +2,9 @@
 
 @import "./main.wxss";
 @import "./icon.wxss";
+.cu-chat{
+  padding-bottom: 50px;
+}
 
 .cu-chat .cu-item > .main.location {
   width: 600rpx;

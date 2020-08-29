@@ -1,9 +1,5 @@
-import {
-  Chat
-} from "../chat/init";
-import {
-  filterDate
-} from '../../utils/util';
+import { Chat } from "../chat/init";
+import { filterDate } from "../../utils/util";
 const app = getApp();
 let that = null;
 
@@ -30,7 +26,7 @@ Page({
         typeof list[i].lastMessage.lastTime === "number"
       ) {
         let date = new Date(list[i].lastMessage.lastTime * 1000);
-        list[i].lastMessage._lastTime = filterDate(date, 'HH:mm');
+        list[i].lastMessage._lastTime = filterDate(date, "HH:mm");
       }
     }
     return [...list];
@@ -40,7 +36,10 @@ Page({
     wx.tim.getConversationList().then((imResponse) => {
       const conversationList = imResponse.data.conversationList;
       wx.hideLoading();
-      console.log('this.updateAllConversation(conversationList)', this.updateAllConversation(conversationList))
+      console.log(
+        "this.updateAllConversation(conversationList)",
+        this.updateAllConversation(conversationList)
+      );
       this.setData({
         conversationList: this.updateAllConversation(conversationList),
       });
@@ -48,42 +47,33 @@ Page({
     });
   },
 
-
   // 监听消息接收
   messageReceived(event) {
     console.log("监听消息接收", event);
     this.getConversationList();
   },
 
-
   async goChat(e) {
     const {
       userid,
       avatar,
       conversationid,
-      unreadCount
+      unreadcount,
     } = e.currentTarget.dataset;
 
-    if (unreadCount * 1 > 0) {
+    if (unreadcount * 1 > 0) {
       // 1.将消息设置为已读
       await wx.tim.setMessageRead({
-        conversationID: conversationid
-      })
+        conversationID: conversationid,
+      });
     }
-
-    // 2.退出IM登录
-    wx.tim.logout().then((imResponse) => {
-      console.log("退出成功");
+    // 2.退出登录
+    wx.tim.logout().then(() => {
       // 3.跳转
       wx.navigateTo({
-        url: `../chat/chat?userId=${userid}&avatar=${avatar}`
-      })
+        url: `../chat/chat?userId=${userid}&avatar=${avatar}&currentConversationID=${conversationid}`,
+      });
     });
-
-
-
-
-
   },
 
   jumpBlackList() {
@@ -96,14 +86,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    app.globalData.pageName = 'chatList';
+    app.globalData.pageName = "chatList";
     that = this;
     new Chat(this, app.globalData.userInfo.u_account, this.messageReceived);
     app.setWatcher(this.data, this.watch); // 设置监听
   },
 
   onShow() {
-    console.log('onShow')
+    console.log("onShow");
     if (this.data.isSDKReady) {
       this.getConversationList();
     }
@@ -113,14 +103,14 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    console.log('onHide')
+    console.log("onHide");
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-    console.log('onUnload')
+    console.log("onUnload");
     wx.tim.logout().then((imResponse) => {
       console.log("退出成功");
     });
@@ -140,6 +130,4 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {},
-
-
 });
