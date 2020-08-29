@@ -1,6 +1,4 @@
-import { Chat } from "../chat/init";
-const app = getApp();
-let that = null;
+
 Page({
   /**
    * 页面的初始数据
@@ -14,10 +12,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    that = this;
-    const selfUserId = app.globalData.userInfo.u_account;
-    new Chat(this, selfUserId);
-    app.setWatcher(this.data, this.watch); // 设置监听
+    // 因为在chatList页面已经登录了IM这里就不需要登录了。
+    this.getUserList();
   },
 
   getUserList() {
@@ -43,18 +39,13 @@ Page({
         });
     });
   },
-  watch: {
-    isSDKReady(newValue) {
-      if (newValue) {
-        that.getUserList();
-      }
-    },
-  },
 
   removeBlacklist(e) {
     const userid = e.currentTarget.dataset.userid;
     wx.tim
-      .removeFromBlacklist({ userIDList: [userid] })
+      .removeFromBlacklist({
+        userIDList: [userid]
+      })
       .then((imResponse) => {
         this.getUserList();
         wx.showToast({
@@ -88,11 +79,7 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload() {
-    wx.tim.logout().then((imResponse) => {
-      console.log("退出成功");
-    });
-  },
+  onUnload() {},
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作

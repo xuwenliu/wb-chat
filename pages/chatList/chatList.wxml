@@ -3,23 +3,14 @@
     <view class="jump-black-list">
         <button bindtap="jumpBlackList" class="cu-btn bg-black shadow round">黑名单</button>
     </view>
-    <view class="cu-item ">
-        <view class="cu-avatar radius lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Morgana.png);"></view>
-        <view class="content">
-            <view class="text-pink">
-                <text class="text-cut">莫甘娜</text>
-            </view>
-            <view class="text-gray text-sm flex">
-                <text class="text-cut">12345</text>
-            </view>
-        </view>
-        <view class="action">
-            <view class="text-grey text-xs">22:20</view>
-            <view class="cu-tag round bg-red sm">5</view>
-        </view>
-    </view>
+    
     <block wx:for="{{conversationList}}">
-        <view wx:if="{{item.type === 'C2C'}}" class="cu-item">
+        <view bindtap="goChat" 
+        data-userid="{{item.userProfile.userID}}" 
+        data-avatar="{{item.userProfile.avatar}}" 
+        data-conversationid="{{item.conversationID}}" 
+        data-unreadCount="{{item.unreadCount}}"
+        wx:if="{{item.type === 'C2C'}}" class="cu-item">
             <view class="cu-avatar radius lg" style="background-image:url({{item.userProfile.avatar}});"></view>
             <view class="content">
                 <view class="text-pink">

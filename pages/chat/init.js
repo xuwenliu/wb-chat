@@ -1,28 +1,28 @@
 import TIM from "../../sdk/tim-wx";
 import COS from "../../sdk/cos-wx-sdk-v5";
-import { SDKAPPID, genTestUserSig } from "../../sdk/GenerateTestUserSig";
+import {
+  SDKAPPID,
+  genTestUserSig
+} from "../../sdk/GenerateTestUserSig";
 const app = getApp();
 
 export class Chat {
   static blacklist;
-  constructor(self, userId) {
+  constructor(self, userId, messageReceived) {
     this.userId = userId;
     this.self = self;
+    this.messageReceived = messageReceived;
     this.tim = TIM.create({
       SDKAppID: SDKAPPID,
     });
     this.init();
   }
-  getTim() {
-    return {
-      tim: this.tim,
-      TIM: TIM,
-    };
-  }
 
   init() {
     this.tim.setLogLevel(0);
-    this.tim.registerPlugin({ "cos-wx-sdk": COS });
+    this.tim.registerPlugin({
+      "cos-wx-sdk": COS
+    });
     // 把tim，TIM挂载到wx上
     wx.tim = this.tim;
     wx.TIM = TIM;
@@ -31,11 +31,14 @@ export class Chat {
     this.tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate);
     // 出错统一处理
     this.tim.on(TIM.EVENT.ERROR, onError);
-    // this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived);
+    this.messageReceived && this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.messageReceived);
     this.tim.on(TIM.EVENT.NET_STATE_CHANGE, netStateChange);
 
     const that = this;
-    function onReadyStateUpdate({ name }) {
+
+    function onReadyStateUpdate({
+      name
+    }) {
       const isSDKReady = name === TIM.EVENT.SDK_READY;
       that.self.setData({
         isSDKReady,
@@ -61,11 +64,17 @@ export class Chat {
     function checkoutNetState(state) {
       switch (state) {
         case TIM.TYPES.NET_STATE_CONNECTED:
-          return { icon: "none", title: "已接入网络", duration: 2000 };
+          return {
+            icon: "none", title: "已接入网络", duration: 2000
+          };
         case TIM.TYPES.NET_STATE_CONNECTING:
-          return { icon: "none", title: "当前网络不稳定", duration: 2000 };
+          return {
+            icon: "none", title: "当前网络不稳定", duration: 2000
+          };
         case TIM.TYPES.NET_STATE_DISCONNECTED:
-          return { icon: "none", title: "当前网络不可用", duration: 2000 };
+          return {
+            icon: "none", title: "当前网络不可用", duration: 2000
+          };
         default:
           return "";
       }
@@ -85,6 +94,7 @@ export class Chat {
         console.log(imResponse.data); // 登录成功
         if (imResponse.data.repeatLogin === true) {
           // 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
+          wx.hideLoading();
           console.log(imResponse.data.errorInfo);
         }
       })

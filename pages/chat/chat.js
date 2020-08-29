@@ -1,8 +1,16 @@
-import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
+import {
+  emojiName,
+  emojiMap,
+  emojiUrl
+} from "./emojiMap";
 import config from "../../utils/config";
 import QQMapWX from "../../utils/qqmap-wx-jssdk.min";
-import { Chat } from "./init";
-import { decodeElement } from "./decodeElement";
+import {
+  Chat
+} from "./init";
+import {
+  decodeElement
+} from "./decodeElement";
 
 let qqmapsdk;
 const app = getApp();
@@ -68,30 +76,27 @@ Page({
           nick: app.globalData.userInfo.nickName,
           avatar: app.globalData.userInfo.avatarUrl,
         })
-        .then((res) => {
-          console.log("修改", res);
-          // wx.tim.getMyProfile().then((res) => {
-          //   console.log("修改后的信息", res);
-          // });
-        });
     },
   },
 
   onLoad(options) {
-    if (!this.data.isSDKReady) {
-      wx.showLoading({ title: "正在同步数据", mask: true });
-    }
-    app.setWatcher(this.data, this.watch); // 设置监听
 
-    const { userId, avatar } = options;
-    const selfUserId = app.globalData.userInfo.u_account;
-    new Chat(this, selfUserId);
+    const {
+      userId,
+      avatar
+    } = options;
+
 
     this.setData({
       avatar,
       userId,
       cusHeadIcon: app.globalData.userInfo.avatarUrl,
       toView: "msg-" + (this.data.msgList.length - 1),
+    });
+
+    // 用户地址解析
+    qqmapsdk = new QQMapWX({
+      key: config.QQ_MAP_KEY,
     });
 
     recorderManager.onStart(() => {
@@ -140,41 +145,34 @@ Page({
       }
     });
 
-    qqmapsdk = new QQMapWX({
-      key: config.QQ_MAP_KEY,
-    });
+
+  },
+  onShow() {
+    if (!this.data.isSDKReady) {
+      wx.showLoading({
+        title: "正在同步数据",
+        mask: true
+      });
+    }
+    app.setWatcher(this.data, this.watch); // 设置监听
+    // 初始化并登录IM
+    new Chat(this, app.globalData.userInfo.u_account, this.messageReceived);
+  },
+  onHide() {},
+  onUnload() {
+    // 从聊天列表进来则返回就不退出登录
+    // 从私信进来则返回要退出登录
+    if (app.globalData.pageName !== 'chatList') {
+      wx.tim.logout();
+    }
   },
 
   // 监听消息接收
   messageReceived(event) {
-    console.log("messageReceived", event);
+    console.log("监听消息接收", event);
+    this.sendMessageToView(event.data[0]);
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {},
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-    console.log(Chat.blacklist);
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {},
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload() {
-    wx.tim.logout().then((imResponse) => {
-      console.log("退出成功");
-    });
-  },
 
   /**
    * 获取聚焦
@@ -209,7 +207,7 @@ Page({
     });
   },
 
-  // 长按录音，监听在页面最外层view，如果是放在button的话，手指上划离开button后获取距离变化有bug
+  // 长按录音，监听在页面最外层view
   handleLongPress(e) {
     console.log(e);
     this.setData({
@@ -228,6 +226,7 @@ Page({
       this.startRecording();
     }
   },
+
   // 录音时的手势上划移动距离对应文案变化
   handleTouchMove(e) {
     if (this.data.isRecording) {
@@ -255,6 +254,7 @@ Page({
       }
     }
   },
+
   // 手指离开页面滑动
   handleTouchEnd() {
     this.setData({
@@ -263,6 +263,7 @@ Page({
     wx.hideLoading();
     recorderManager.stop();
   },
+
   // 切换录音按钮
   chooseRecord() {
     this.setData({
@@ -366,12 +367,14 @@ Page({
       });
     }
   },
+
   // 发消息选中emoji
   chooseEmoji(e) {
     this.setData({
       messageContent: this.data.messageContent + e.currentTarget.dataset.emoji,
     });
   },
+
   isNull(content) {
     if (content === "") {
       return true;
@@ -397,7 +400,7 @@ Page({
     }
   },
 
-  // 发送text message 包含 emoji
+  // 发送text + emoji
   sendMessage() {
     if (!this.isNull(this.data.messageContent)) {
       wx.showLoading();
@@ -580,7 +583,11 @@ Page({
 
   // 位置预览
   viewLocation(e) {
-    const { latitude, longitude, address } = e.currentTarget.dataset;
+    const {
+      latitude,
+      longitude,
+      address
+    } = e.currentTarget.dataset;
     wx.openLocation({
       latitude: +latitude,
       longitude: +longitude,
@@ -608,10 +615,6 @@ Page({
   // 发送消息到页面上
   sendMessageToView(message) {
     message.virtualDom = decodeElement(message);
-    let date = new Date(message.time * 1000);
-    console.log("sendMessageToView", message);
-    // message.newtime = formatTime(date)
-
     this.setData({
       msgList: [...this.data.msgList, message],
     });

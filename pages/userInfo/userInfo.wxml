@@ -7,7 +7,7 @@
     <view class="detail">
       <image class="headerImg" src="{{userInfo.icon || '../../img/header/u3.jpg'}}"></image>
       <view class="d_top">
-        <view bindtap="chat" class="dt_message">私信</view>
+        <view wx:if="{{account != userInfo.userId}}" bindtap="chat" class="dt_message">私信</view>
         <view 
           wx:if="{{account != userInfo.userId}}"
           class="{{userInfo.curUserIsFollow ? 'dt_attention' : 'dt_attention active'}}"

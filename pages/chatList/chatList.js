@@ -1,5 +1,9 @@
-import { Chat } from "../chat/init";
-import { filterDate } from '../../utils/util';
+import {
+  Chat
+} from "../chat/init";
+import {
+  filterDate
+} from '../../utils/util';
 const app = getApp();
 let that = null;
 
@@ -26,7 +30,7 @@ Page({
         typeof list[i].lastMessage.lastTime === "number"
       ) {
         let date = new Date(list[i].lastMessage.lastTime * 1000);
-        list[i].lastMessage._lastTime = filterDate(date,'HH:mm');
+        list[i].lastMessage._lastTime = filterDate(date, 'HH:mm');
       }
     }
     return [...list];
@@ -36,33 +40,73 @@ Page({
     wx.tim.getConversationList().then((imResponse) => {
       const conversationList = imResponse.data.conversationList;
       wx.hideLoading();
-      console.log('this.updateAllConversation(conversationList)',this.updateAllConversation(conversationList))
+      console.log('this.updateAllConversation(conversationList)', this.updateAllConversation(conversationList))
       this.setData({
         conversationList: this.updateAllConversation(conversationList),
       });
       console.log("会话列表", imResponse);
     });
   },
+
+
+  // 监听消息接收
+  messageReceived(event) {
+    console.log("监听消息接收", event);
+    this.getConversationList();
+  },
+
+
+  async goChat(e) {
+    const {
+      userid,
+      avatar,
+      conversationid,
+      unreadCount
+    } = e.currentTarget.dataset;
+
+    if (unreadCount * 1 > 0) {
+      // 1.将消息设置为已读
+      await wx.tim.setMessageRead({
+        conversationID: conversationid
+      })
+    }
+
+    // 2.退出IM登录
+    wx.tim.logout().then((imResponse) => {
+      console.log("退出成功");
+      // 3.跳转
+      wx.navigateTo({
+        url: `../chat/chat?userId=${userid}&avatar=${avatar}`
+      })
+    });
+
+
+
+
+
+  },
+
+  jumpBlackList() {
+    wx.navigateTo({
+      url: "../blankList/blankList",
+    });
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    app.globalData.pageName = 'chatList';
     that = this;
-    const selfUserId = app.globalData.userInfo.u_account;
-    new Chat(this, selfUserId);
+    new Chat(this, app.globalData.userInfo.u_account, this.messageReceived);
     app.setWatcher(this.data, this.watch); // 设置监听
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {},
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
+  onShow() {
     console.log('onShow')
+    if (this.data.isSDKReady) {
+      this.getConversationList();
+    }
   },
 
   /**
@@ -97,9 +141,5 @@ Page({
    */
   onShareAppMessage: function () {},
 
-  jumpBlackList() {
-    wx.navigateTo({
-      url: "../blankList/blankList",
-    });
-  },
+
 });
