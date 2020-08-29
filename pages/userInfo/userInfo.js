@@ -99,10 +99,20 @@ Page({
   //私信
   chat() {
     if (!this.data.account) {
-      wx.showToast({
-        title: '请先授权登录',
-        icon: 'none'
+      wx.showModal({
+        title: '提示',
+        content: '请先授权登录',
+        success: (res) => {
+          console.log(res)
+          if (res.confirm) {
+            wx.switchTab({
+              url: "../mine/mine"
+            })
+          }
+          
+        }
       })
+      return;
     } else {
       wx.navigateTo({
         url: `../chat/chat?userId=${this.data.userId}&avatar=${this.data.userInfo.icon}`

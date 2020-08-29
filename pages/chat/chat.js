@@ -1,9 +1,19 @@
-import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
+import {
+  emojiName,
+  emojiMap,
+  emojiUrl
+} from "./emojiMap";
 import config from "../../utils/config";
 import QQMapWX from "../../utils/qqmap-wx-jssdk.min";
-import { Chat } from "./init";
-import { decodeElement } from "./decodeElement";
-import { throttle } from "../../utils/util";
+import {
+  Chat
+} from "./init";
+import {
+  decodeElement
+} from "./decodeElement";
+import {
+  throttle
+} from "../../utils/util";
 
 let qqmapsdk;
 const app = getApp();
@@ -75,20 +85,44 @@ Page({
         nick: app.globalData.userInfo.nickName,
         avatar: app.globalData.userInfo.avatarUrl,
       });
-      that.getMessageList();
+
+      //如果是私聊进来则需要手动获取 会话ID
+      if (app.globalData.pageName !== 'chatList') {
+        wx.tim.getConversationList().then((imResponse) => {
+          const conversationList = imResponse.data.conversationList;
+          console.log('conversationList',conversationList)
+          console.log('that.data.userId',that.data.userId)
+          if (conversationList.length > 0) {
+            const userId = that.data.userId;
+            conversationList.forEach(item => {
+              if (item.userProfile.userID === userId) {
+                that.setData({
+                  currentConversationID: item.conversationID
+                })
+              }
+            })
+            that.getMessageList();
+          }
+        })
+      }else {
+        that.getMessageList();
+      }
       that.scrollToBottom();
     },
   },
 
   onLoad(options) {
     that = this;
-    const { userId, avatar, currentConversationID } = options;
+    const {
+      userId,
+      avatar,
+      currentConversationID
+    } = options;
 
     this.setData({
       avatar,
       userId,
       cusHeadIcon: app.globalData.userInfo.avatarUrl,
-      toView: "msg-" + (this.data.msgList.length - 1),
       currentConversationID,
       nextReqMessageID: "", // 第一次没有下一个
     });
@@ -145,11 +179,12 @@ Page({
     });
   },
   onShow() {
-    this.setData({ isShow: true });
+    this.setData({
+      isShow: true
+    });
 
     if (!this.data.isSDKReady) {
       wx.showLoading({
-        title: "正在同步数据",
         mask: true,
       });
     }
@@ -161,8 +196,11 @@ Page({
   onUnload() {
     // 从聊天列表进来则返回就不退出登录
     // 从私信进来则返回要退出登录
+    console.log('onUnload',app.globalData.pageName);
     if (app.globalData.pageName !== "chatList") {
-      wx.tim.logout();
+      wx.tim.logout().then(() => {
+        console.log('私信进来则返回要退出登录');
+      });
     }
     this.setData({
       isShow: false,
@@ -220,6 +258,12 @@ Page({
 
   // 获取消息列表
   getMessageList() {
+
+    // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
+    if(!this.data.currentConversationID){
+      return;
+    }
+
     // 判断是否拉完了，isCompleted 的话要报一下没有更多了
     if (!this.data.isCompleted) {
       // 如果请求还没回来，又拉，此时做一下防御
@@ -272,7 +316,6 @@ Page({
       scrollHeight: windowHeight - keyHeight + "px",
     });
     this.setData({
-      toView: "msg-" + (this.data.msgList.length - 1),
       inputBottom: keyHeight + "px",
     });
   },
@@ -283,9 +326,6 @@ Page({
       scrollHeight: "100vh",
       inputBottom: 0,
       isFocus: false,
-    });
-    this.setData({
-      toView: "msg-" + (this.data.msgList.length - 1),
     });
   },
 
@@ -671,7 +711,11 @@ Page({
 
   // 位置预览
   viewLocation(e) {
-    const { latitude, longitude, address } = e.currentTarget.dataset;
+    const {
+      latitude,
+      longitude,
+      address
+    } = e.currentTarget.dataset;
     wx.openLocation({
       latitude: +latitude,
       longitude: +longitude,

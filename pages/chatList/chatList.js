@@ -1,5 +1,9 @@
-import { Chat } from "../chat/init";
-import { filterDate } from "../../utils/util";
+import {
+  Chat
+} from "../chat/init";
+import {
+  filterDate
+} from "../../utils/util";
 const app = getApp();
 let that = null;
 
@@ -88,16 +92,82 @@ Page({
   onLoad(options) {
     app.globalData.pageName = "chatList";
     that = this;
-    new Chat(this, app.globalData.userInfo.u_account, this.messageReceived);
-    app.setWatcher(this.data, this.watch); // 设置监听
   },
 
   onShow() {
     console.log("onShow");
+    if (!app.globalData.userInfo.u_account) {
+      wx.showModal({
+        title: '提示',
+        content: '请先授权登录',
+        showCancel: false,
+        success: (res) => {
+          if (res.confirm) {
+            wx.switchTab({
+              url: "../mine/mine"
+            })
+          }
+        }
+      })
+      return;
+    }
+    new Chat(this, app.globalData.userInfo.u_account, this.messageReceived);
+    app.setWatcher(this.data, this.watch); // 设置监听
     if (this.data.isSDKReady) {
       this.getConversationList();
     }
   },
+
+
+  // ListTouch触摸开始
+  ListTouchStart(e) {
+    this.setData({
+      ListTouchStart: e.touches[0].pageX
+    })
+  },
+
+  // ListTouch计算方向
+  ListTouchMove(e) {
+    this.setData({
+      ListTouchDirection: e.touches[0].pageX - this.data.ListTouchStart > 0 ? 'right' : 'left'
+    })
+  },
+
+  // ListTouch计算滚动
+  ListTouchEnd(e) {
+    if (this.data.ListTouchDirection == 'left') {
+      this.setData({
+        modalName: e.currentTarget.dataset.target
+      })
+    } else {
+      this.setData({
+        modalName: null
+      })
+    }
+    this.setData({
+      ListTouchDirection: null
+    })
+  },
+
+  // 删除会话
+  removeConversation(e) {
+    const {
+      conversationid
+    } = e.currentTarget.dataset;
+    wx.tim.deleteConversation(conversationid).then(() => {
+      wx.showToast({
+        title: '会话删除成功',
+        icon: 'none'
+      })
+      this.getConversationList();
+    }).catch(() => {
+      wx.showToast({
+        title: '会话删除失败',
+        icon: 'none'
+      })
+    })
+  },
+
 
   /**
    * 生命周期函数--监听页面隐藏
