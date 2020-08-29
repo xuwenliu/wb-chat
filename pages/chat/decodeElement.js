@@ -128,8 +128,6 @@ export function decodeElement(message) {
   switch (message.type) {
     case "TIMTextElem":
       return parseText(message);
-    case "TIMCustomElem":
-      return parseCustom(message);
     default:
       return [];
   }
