@@ -1,15 +1,11 @@
 import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
-import config from "../../utils/config";
-import QQMapWX from "../../utils/qqmap-wx-jssdk.min";
 import { Chat } from "./init";
 import { decodeElement } from "./decodeElement";
 import { throttle } from "../../utils/util";
 
-let qqmapsdk;
 const app = getApp();
 let that = null;
 
-let windowWidth = wx.getSystemInfoSync().windowWidth;
 let windowHeight = wx.getSystemInfoSync().windowHeight;
 let keyHeight = 0;
 
@@ -36,7 +32,6 @@ Page({
     avatar: "", // 发送给谁的头像
     msgList: [],
     messageContent: "", // 用户输入的文本内容
-    scrollHeight: "100vh",
     inputBottom: 0,
 
     // 录音相关
@@ -130,11 +125,6 @@ Page({
       new Chat(app.globalData.userInfo.u_account, this.messageReceived);
     }
 
-    // 用户地址解析
-    qqmapsdk = new QQMapWX({
-      key: config.QQ_MAP_KEY,
-    });
-
     recorderManager.onStart(() => {
       console.log("recorder start");
     });
@@ -188,14 +178,6 @@ Page({
   },
   onHide() {},
   onUnload() {
-    // 从聊天列表进来则返回就不退出登录
-    // 从私信进来则返回要退出登录
-    console.log("onUnload", app.globalData.pageName);
-    // if (app.globalData.pageName !== "chatList") {
-    //   wx.tim.logout().then(() => {
-    //     console.log('私信进来则返回要退出登录');
-    //   });
-    // }
     this.setData({
       isShow: false,
     });
@@ -244,20 +226,16 @@ Page({
     for (let i = 0; i < list.length; i++) {
       let message = list[i];
       list[i].virtualDom = decodeElement(message);
-      // let date = new Date(message.time * 1000)
-      // list[i].newtime = formatTime(date)
     }
     return [...list];
   },
 
   // 获取消息列表
   getMessageList() {
-
     // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
     if (!this.data.currentConversationID) {
       return;
     }
-
     // 判断是否拉完了，isCompleted 的话要报一下没有更多了
     if (!this.data.isCompleted) {
       // 如果请求还没回来，又拉，此时做一下防御
@@ -272,7 +250,6 @@ Page({
             count: 15,
           })
           .then((res) => {
-            console.log("------", res);
             this.sendMessageToView(res.data.messageList);
             this.setData({
               isCompleted: res.data.isCompleted,
@@ -307,7 +284,6 @@ Page({
     keyHeight = e.detail.height;
     this.setData({
       isFocus: true,
-      scrollHeight: windowHeight - keyHeight + "px",
     });
     this.setData({
       inputBottom: keyHeight + "px",
@@ -317,7 +293,6 @@ Page({
   //失去聚焦(软键盘消失)
   blur(e) {
     this.setData({
-      scrollHeight: "100vh",
       inputBottom: 0,
       isFocus: false,
     });
@@ -331,7 +306,6 @@ Page({
 
   // 长按录音，监听在页面最外层view
   handleLongPress(e) {
-    console.log(e);
     this.setData({
       startPoint: e.touches[0],
     });
@@ -525,7 +499,6 @@ Page({
   // 发送text + emoji
   sendMessage() {
     if (!this.isNull(this.data.messageContent)) {
-      wx.showLoading();
       const message = wx.tim.createTextMessage({
         to: this.data.userId, //发给谁
         conversationType: wx.TIM.TYPES.CONV_C2C,
@@ -537,7 +510,6 @@ Page({
         .sendMessage(message)
         .then((imResponse) => {
           this.sendMessageToView(message);
-          wx.hideLoading();
           this.setData({
             messageContent: "",
           });
@@ -549,7 +521,6 @@ Page({
             title: "消息发送失败",
             icon: "none",
           });
-          wx.hideLoading();
         });
     } else {
       wx.showToast({
@@ -585,10 +556,8 @@ Page({
             this.sendMessageToView(message);
             wx.hideLoading();
             this.handleClose();
-            console.log("发送成功", imResponse);
           })
           .catch((imError) => {
-            console.log("发送失败", imError);
             wx.showToast({
               title: "图片发送失败",
               icon: "none",
@@ -620,7 +589,6 @@ Page({
           .then((imResponse) => {
             this.sendMessageToView(message);
             wx.hideLoading();
-            console.log("发送成功", imResponse);
             this.handleClose();
           })
           .catch((imError) => {
@@ -629,7 +597,6 @@ Page({
               icon: "none",
             });
             wx.hideLoading();
-            console.log("发送失败", imError);
           });
       },
     });
@@ -639,48 +606,36 @@ Page({
   sendLocation() {
     wx.getLocation({
       type: "gcj02",
-      success: async (res) => {
-        const latitude = res.latitude;
-        const longitude = res.longitude;
-        // 构建标注
-        let marker = {
-          id: 1,
-          latitude: latitude,
-          longitude: longitude,
-          width: 50,
-          height: 50,
-        };
-        let markers = new Array();
-        markers.push(marker);
-        const address = await this.getAddress(marker);
-
-        wx.showLoading();
-        const message = wx.tim.createCustomMessage({
-          to: this.data.userId,
-          conversationType: wx.TIM.TYPES.CONV_C2C,
-          payload: {
-            data: latitude.toString(),
-            description: longitude.toString(),
-            extension: address,
+      success: (res) => {
+        const { latitude, longitude } = res;
+        wx.chooseLocation({
+          latitude,
+          longitude,
+          success: (res) => {
+            const message = wx.tim.createCustomMessage({
+              to: this.data.userId,
+              conversationType: wx.TIM.TYPES.CONV_C2C,
+              // 这里将位置信息赋给以下3个变量，因为SDK只提供了这三个
+              payload: {
+                data: res.latitude.toString(),
+                description: res.longitude.toString(),
+                extension: res.address,
+              },
+            });
+            wx.tim
+              .sendMessage(message)
+              .then(() => {
+                this.sendMessageToView(message);
+                this.handleClose();
+              })
+              .catch((imError) => {
+                wx.showToast({
+                  title: "位置发送失败",
+                  icon: "none",
+                });
+              });
           },
         });
-
-        wx.tim
-          .sendMessage(message)
-          .then((imResponse) => {
-            this.sendMessageToView(message);
-            wx.hideLoading();
-            console.log("发送成功", imResponse);
-            this.handleClose();
-          })
-          .catch((imError) => {
-            wx.showToast({
-              title: "位置发送失败",
-              icon: "none",
-            });
-            wx.hideLoading();
-            console.log("发送失败", imError);
-          });
       },
     });
   },
@@ -714,22 +669,6 @@ Page({
     });
   },
 
-  // 地址逆解析
-  getAddress(location) {
-    return new Promise((resolve, reject) => {
-      qqmapsdk.reverseGeocoder({
-        location: {
-          latitude: location.latitude,
-          longitude: location.longitude,
-        },
-        success: function (res) {
-          let address = res.result.address;
-          resolve(address);
-        },
-      });
-    });
-  },
-
   // 发送消息到页面上
   sendMessageToView(message) {
     if (Array.isArray(message)) {
@@ -751,13 +690,13 @@ Page({
       .addToBlacklist({
         userIDList: [this.data.userId],
       })
-      .then((imResponse) => {
+      .then(() => {
         wx.showToast({
           title: "加入黑名单成功",
           icon: "none",
         });
       })
-      .catch((imError) => {
+      .catch(() => {
         wx.showToast({
           title: "加入黑名单失败",
           icon: "none",
