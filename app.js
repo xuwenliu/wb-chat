@@ -49,7 +49,7 @@ App({
 
   /**
    * 设置监听器----主要是因为IM必须要SDK ready后才能调用其他方法。需要注册监听器
-   * 
+   *
    */
   setWatcher(data, watch) {
     // 接收pages/xxx.js传过来的data对象和watch对象
@@ -82,5 +82,6 @@ App({
     u_account: null,
     u_role: 0,
     pageName: "",
+    isSDKReady: false,
   },
 });

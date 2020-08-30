@@ -1,10 +1,9 @@
-
+const app = getApp();
 Page({
   /**
    * 页面的初始数据
    */
   data: {
-    isSDKReady: false,
     userList: [],
   },
 
@@ -14,6 +13,7 @@ Page({
   onLoad(options) {
     // 因为在chatList页面已经登录了IM这里就不需要登录了。
     this.getUserList();
+    app.globalData.pageName="blankList";
   },
 
   getUserList() {

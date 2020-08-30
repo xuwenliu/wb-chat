@@ -7,10 +7,10 @@ import {
 const app = getApp();
 
 export class Chat {
-  static blacklist;
-  constructor(self, userId, messageReceived) {
+
+  // 接受 需要登录的用户userId和接受消息的回调函数
+  constructor(userId, messageReceived) {
     this.userId = userId;
-    this.self = self;
     this.messageReceived = messageReceived;
     this.tim = TIM.create({
       SDKAppID: SDKAPPID,
@@ -26,7 +26,7 @@ export class Chat {
     // 把tim，TIM挂载到wx上
     wx.tim = this.tim;
     wx.TIM = TIM;
-    this.login();
+    this.login(); // 调用登录IM
     this.tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
     this.tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate);
     // 出错统一处理
@@ -34,15 +34,12 @@ export class Chat {
     this.messageReceived && this.tim.on(TIM.EVENT.MESSAGE_RECEIVED, this.messageReceived);
     this.tim.on(TIM.EVENT.NET_STATE_CHANGE, netStateChange);
 
-    const that = this;
-
     function onReadyStateUpdate({
       name
     }) {
       const isSDKReady = name === TIM.EVENT.SDK_READY;
-      that.self.setData({
-        isSDKReady,
-      });
+      // SDK已经 ready 则通知调用监听isSDKReady的地方，继续后续操作。
+      getApp().globalData.isSDKReady = isSDKReady; 
     }
 
     function onError(event) {
