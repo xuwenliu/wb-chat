@@ -1,8 +1,8 @@
 /* pages/chat/chat.wxss */
 
-@import "./main.wxss";
-@import "./icon.wxss";
-.cu-chat{
+@import "../../style/main.wxss";
+@import "../../style/icon.wxss";
+.cu-chat {
   padding-bottom: 50px;
 }
 

@@ -1,6 +1,6 @@
 /* pages/blankList/blankList.wxss */
-@import "../chat/main.wxss";
-@import "../chat/icon.wxss";
+@import "../../style/main.wxss";
+@import "../../style/icon.wxss";
 
 .cu-list.menu-avatar > .cu-item::after {
   position: absolute;

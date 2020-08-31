@@ -5,7 +5,7 @@
     </view>
     <block wx:for="{{conversationList}}" wx:key="{{item.conversationID}}">
         <view bindtap="jumpChat" data-userid="{{item.userProfile.userID}}" data-avatar="{{item.userProfile.avatar}}" data-conversationid="{{item.conversationID}}" data-unreadCount="{{item.unreadCount}}" wx:if="{{item.type === 'C2C'}}" class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" data-target="move-box-{{index}}">
-            <view class="cu-avatar radius lg" style="background-image:url({{item.userProfile.avatar}});"></view>
+            <view class="cu-avatar round lg" style="background-image:url({{item.userProfile.avatar}});"></view>
             <view class="content">
                 <view class="text-pink">
                     <text class="text-cut">{{item.userProfile.nick}}</text>

@@ -1,6 +1,6 @@
-import { emojiName, emojiMap, emojiUrl } from "./emojiMap";
+import { emojiName, emojiMap, emojiUrl } from "../../utils/emojiMap";
 import { Chat } from "./init";
-import { decodeElement } from "./decodeElement";
+import { decodeElement } from "../../utils/decodeElement";
 import { throttle } from "../../utils/util";
 
 const app = getApp();
