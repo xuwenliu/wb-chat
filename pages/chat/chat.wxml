@@ -1,19 +1,16 @@
-<view class="cu-chat" id="chat" bind:longpress="handleLongPress" bind:touchmove="handleTouchMove" bind:touchend="handleTouchEnd">
+<view class="cu-chat" style="padding-bottom:{{isEmojiOpen || isMoreOpen?'200px':'50px'}}" id="chat" bind:longpress="handleLongPress" bind:touchmove="handleTouchMove" bind:touchend="handleTouchEnd">
     <view class="{{isRecording ? 'record-modal' : 'record-modal modal-display'}}">
         <view class="wrapper">
             <view class="modal-loading"></view>
         </view>
         <view class="modal-title">{{title}}</view>
     </view>
-    <view class="add-black-list">
-        <button bindtap="addBlackList" class="cu-btn bg-black shadow round">加入黑名单</button>
-    </view>
     <block wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
         <!-- 文本+emoji  message.flow === 'out' 自己发送的消息 'in' 收到消息 -->
         <view wx:if="{{message.type === 'TIMTextElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
             <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
             <view class="main">
-                <view class="content text-content shadow {{message.flow === 'out'?' bg-green':''}}">
+                <view class="content text-content shadow {{message.flow === 'out'?'bg-green':''}}">
                     <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="{{message.ID}}">
                         <text class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</text>
                         <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
@@ -58,7 +55,7 @@
                 <view wx:if="{{message.flow === 'out'}}" class="action text-bold text-black">
                     {{message.payload.second}}s
                 </view>
-                <view bindtap="openAudio" data-url="{{message.payload.url}}" class="content shadow">
+                <view bindtap="openAudio" data-url="{{message.payload.url}}" class="content shadow {{message.flow === 'out'?'bg-green':''}}">
                     <text class="cuIcon-sound text-xxl padding-right-sm"></text>
                 </view>
                 <view wx:if="{{message.flow !== 'out'}}" class="action text-bold text-black">
@@ -115,6 +112,10 @@
                 <view class="block" bindtap="sendLocation">
                     <text class="cuIcon-location icon text-black"></text>
                     <view class="name text-black">位置</view>
+                </view>
+                <view class="block" bindtap="addBlackList">
+                    <text class="cuIcon-text icon text-black"></text>
+                    <view class="name text-black">加入黑名单</view>
                 </view>
             </view>
         </view>

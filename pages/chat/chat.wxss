@@ -2,9 +2,9 @@
 
 @import "../../style/main.wxss";
 @import "../../style/icon.wxss";
-.cu-chat {
+/* .cu-chat {
   padding-bottom: 50px;
-}
+} */
 
 .cu-chat .cu-item > .main.location {
   width: 600rpx;
@@ -88,13 +88,6 @@
 }
 .cu-bar.input .face {
   margin-left: 0;
-}
-
-.add-black-list {
-  position: fixed;
-  right: 10px;
-  top: 10px;
-  z-index: 9999;
 }
 
 .record-modal {

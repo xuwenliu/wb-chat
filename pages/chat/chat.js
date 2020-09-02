@@ -456,12 +456,15 @@ Page({
         isMoreOpen: false,
         isEmojiOpen: true,
       });
+     
     } else {
       this.setData({
         isMoreOpen: false,
         isEmojiOpen: !this.data.isEmojiOpen,
       });
+      this.scrollToBottom();
     }
+
   },
 
   // 发消息选中emoji
@@ -493,6 +496,7 @@ Page({
         isMoreOpen: !this.data.isMoreOpen,
         isEmojiOpen: false,
       });
+      this.scrollToBottom();
     }
   },
 

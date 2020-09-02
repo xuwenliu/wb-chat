@@ -1,7 +1,11 @@
-<!-- pages/chatList/chatList.wxml -->
 <view class="cu-list menu-avatar">
-    <view class="jump-black-list">
-        <button bindtap="jumpBlackList" class="cu-btn bg-black shadow round">黑名单</button>
+    <view class="cu-item" bindtap="jumpBlackList">
+        <view class="cu-avatar round lg" style="background-image:url();"></view>
+        <view class="content">
+            <view class="text-pink">
+                <text class="text-cut text-gray">黑名单</text>
+            </view>
+        </view>
     </view>
     <block wx:for="{{conversationList}}" wx:key="{{item.conversationID}}">
         <view bindtap="jumpChat" data-userid="{{item.userProfile.userID}}" data-avatar="{{item.userProfile.avatar}}" data-conversationid="{{item.conversationID}}" data-unreadCount="{{item.unreadCount}}" wx:if="{{item.type === 'C2C'}}" class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" data-target="move-box-{{index}}">
@@ -23,7 +27,9 @@
                 </view>
             </view>
             <view class="move">
-                <view catchtap="removeConversation" data-conversationid="{{item.conversationID}}" class="bg-red">删除</view>
+                <view catchtap="removeConversation" data-conversationid="{{item.conversationID}}" class="bg-red">
+                    删除
+                </view>
             </view>
         </view>
     </block>
