@@ -6,8 +6,8 @@ import { throttle } from "../../utils/util";
 const app = getApp();
 let that = null;
 
-let windowHeight = wx.getSystemInfoSync().windowHeight;
-let isIphone = wx.getSystemInfoSync().model.indexOf("iPhone") > -1;
+const windowHeight = wx.getSystemInfoSync().windowHeight;
+const isIphone = wx.getSystemInfoSync().model.indexOf("iPhone") > -1;
 let keyHeight = 0;
 
 const audioContext = wx.createInnerAudioContext();
@@ -282,10 +282,9 @@ Page({
    */
   focus(e) {
     keyHeight = e.detail.height;
+    console.log('keyHeight',keyHeight)
     this.setData({
       isFocus: true,
-    });
-    this.setData({
       inputBottom: keyHeight + "px",
     });
   },
