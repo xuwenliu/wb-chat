@@ -47,6 +47,7 @@
 .cu-bar.bottom {
   display: block;
   padding-right: 0;
+  padding-bottom: 30px;
 }
 .solid-bottom {
   width: 76vw;

@@ -7,6 +7,7 @@ const app = getApp();
 let that = null;
 
 let windowHeight = wx.getSystemInfoSync().windowHeight;
+let isIphone = wx.getSystemInfoSync().model.indexOf("iPhone") > -1;
 let keyHeight = 0;
 
 const audioContext = wx.createInnerAudioContext();
@@ -21,6 +22,7 @@ const recordOptions = {
 
 Page({
   data: {
+    isIphone: isIphone,
     isShow: false,
     // isSDKReady: false,
     currentConversationID: "",
@@ -157,10 +159,8 @@ Page({
               this.sendMessageToView(message);
               wx.hideLoading();
               this.handleClose();
-              console.log("语音发送成功", imResponse);
             })
             .catch((imError) => {
-              console.log("语音发送失败", imError);
               wx.showToast({
                 title: "语音发送失败",
                 icon: "none",
@@ -497,6 +497,7 @@ Page({
     } else {
       wx.showToast({
         title: "消息不能为空",
+        icon: "none",
       });
     }
     this.setData({
