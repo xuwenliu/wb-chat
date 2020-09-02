@@ -1,10 +1,9 @@
-import TIM from "../../sdk/tim-wx";
-import COS from "../../sdk/cos-wx-sdk-v5";
+import TIM from "../sdk/tim-wx";
+import COS from "../sdk/cos-wx-sdk-v5";
 import {
   SDKAPPID,
   genTestUserSig
-} from "../../sdk/GenerateTestUserSig";
-const app = getApp();
+} from "../sdk/GenerateTestUserSig";
 
 export class Chat {
 

@@ -1,5 +1,5 @@
 import { emojiName, emojiMap, emojiUrl } from "../../utils/emojiMap";
-import { Chat } from "./init";
+import { Chat } from "../../utils/im";
 import { decodeElement } from "../../utils/decodeElement";
 import { throttle } from "../../utils/util";
 
@@ -304,11 +304,8 @@ Page({
     });
   },
 
-  // 长按录音，监听在页面最外层view
+  // 长按录音
   handleLongPress(e) {
-    this.setData({
-      startPoint: e.touches[0],
-    });
     if (
       e.target.id === "say0" ||
       e.target.id === "say1" ||
@@ -323,38 +320,11 @@ Page({
     }
   },
 
-  // 录音时的手势上划移动距离对应文案变化
-  handleTouchMove(e) {
-    if (this.data.isRecording) {
-      if (
-        this.data.startPoint.clientY - e.touches[e.touches.length - 1].clientY >
-        100
-      ) {
-        this.setData({
-          title: "松开手指，取消发送",
-          canSend: false,
-        });
-      } else if (
-        this.data.startPoint.clientY - e.touches[e.touches.length - 1].clientY >
-        20
-      ) {
-        this.setData({
-          title: "上划可取消",
-          canSend: true,
-        });
-      } else {
-        this.setData({
-          title: "正在录音",
-          canSend: true,
-        });
-      }
-    }
-  },
-
-  // 手指离开页面滑动
+  // 结束录音
   handleTouchEnd() {
     this.setData({
       isRecording: false,
+      canSend: true,
     });
     wx.hideLoading();
     recorderManager.stop();
@@ -456,7 +426,6 @@ Page({
         isMoreOpen: false,
         isEmojiOpen: true,
       });
-     
     } else {
       this.setData({
         isMoreOpen: false,
@@ -464,7 +433,6 @@ Page({
       });
       this.scrollToBottom();
     }
-
   },
 
   // 发消息选中emoji

@@ -1,4 +1,4 @@
-import { Chat } from "../chat/init";
+import { Chat } from "../../utils/im";
 import { filterDate } from "../../utils/util";
 const app = getApp();
 let that = null;

@@ -1,5 +1,5 @@
 <view class="cu-list menu-avatar">
-    <view class="cu-item " wx:for="{{userList}}">
+    <view class="cu-item " wx:for="{{userList}}" wx:key="index">
         <view class="cu-avatar round lg" style="background-image:url({{item.avatar}});"></view>
         <view class="content">
             <view class="text-pink">

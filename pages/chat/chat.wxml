@@ -1,4 +1,4 @@
-<view class="cu-chat" style="padding-bottom:{{isEmojiOpen || isMoreOpen?'200px':'50px'}}" id="chat" bind:longpress="handleLongPress" bind:touchmove="handleTouchMove" bind:touchend="handleTouchEnd">
+<view class="cu-chat" style="padding-bottom:{{isEmojiOpen || isMoreOpen?'200px':'50px'}}" id="chat">
     <view class="{{isRecording ? 'record-modal' : 'record-modal modal-display'}}">
         <view class="wrapper">
             <view class="modal-loading"></view>
@@ -11,7 +11,7 @@
             <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
             <view class="main">
                 <view class="content text-content shadow {{message.flow === 'out'?'bg-green':''}}">
-                    <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="{{message.ID}}">
+                    <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="index2">
                         <text class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</text>
                         <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
                     </block>
@@ -73,7 +73,7 @@
             </view>
             <input hidden="{{isRecord}}" class="solid-bottom" bindconfirm='sendMessage' bindinput="contentChange" adjust-position='{{false}}' value='{{messageContent}}' confirm-type='send' focus="{{isFocus}}" bindfocus='focus' bindblur='blur' maxlength="300" cursor-spacing="10"></input>
             <!-- 录音 -->
-            <view class="record" id="say0" hidden="{{!isRecord}}">
+            <view bind:longpress="handleLongPress" bind:touchend="handleTouchEnd" class="record" id="say0" hidden="{{!isRecord}}">
                 <text id="say1" wx:if="{{!isRecording}}">按住 说话</text>
                 <text id="say2" wx:if="{{isRecording}}">抬起 停止</text>
             </view>
