@@ -25,7 +25,9 @@ export class Chat {
     // 把tim，TIM挂载到wx上
     wx.tim = this.tim;
     wx.TIM = TIM;
-    this.login(); // 调用登录IM
+    if(!getApp().globalData.isSDKReady){
+      this.login(); // 调用登录IM
+    }
     this.tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate);
     this.tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate);
     // 出错统一处理

@@ -51,10 +51,10 @@ Page({
     // 已经登录了则直接获取会话列表
     if (app.globalData.isSDKReady) {
       this.getConversationList();
-    } else {
-      // 反之则登录-具体登录在Chat这个类里面实现的。
-      new Chat(app.globalData.userInfo.u_account, this.messageReceived);
     }
+    // 反之则登录-具体登录在Chat这个类里面实现的。
+    new Chat(app.globalData.userInfo.u_account, this.messageReceived);
+
   },
   onPullDownRefresh() {
     this.getConversationList();

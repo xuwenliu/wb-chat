@@ -19,7 +19,6 @@ const recordOptions = {
 
 Page({
   data: {
-    inputBottom: 0,
     isShow: false,
     currentConversationID: "",
     nextReqMessageID: "",
@@ -118,8 +117,8 @@ Page({
       wx.showLoading({
         mask: true,
       });
-      new Chat(app.globalData.userInfo.u_account, this.messageReceived);
     }
+    new Chat(app.globalData.userInfo.u_account, this.messageReceived);
 
     recorderManager.onStart(() => {
       console.log("recorder start");
@@ -151,7 +150,7 @@ Page({
           wx.tim
             .sendMessage(message)
             .then((imResponse) => {
-              this.sendMessageToView(message);
+              this.sendMessageToView([message]);
               wx.hideLoading();
               this.handleClose();
             })
@@ -176,15 +175,20 @@ Page({
     this.setData({
       isShow: false,
     });
+    wx.tim.logout();
   },
   onPullDownRefresh() {
     throttle(this.getMessageList, 1000)();
   },
 
   // 监听消息接收
-  messageReceived(event) {
+  async messageReceived(event) {
     console.log("监听消息接收", event);
-    this.sendMessageToView(event.data[0]);
+    this.sendMessageToView(event.data);
+    // 同时设置会话为已读
+    await wx.tim.setMessageRead({
+      conversationID: this.data.currentConversationID,
+    });
   },
 
   // 滚动到列表bottom
@@ -247,7 +251,7 @@ Page({
             count: 15,
           })
           .then((res) => {
-            this.sendMessageToView(res.data.messageList);
+            this.sendMessageToView(res.data.messageList, true);
             this.setData({
               isCompleted: res.data.isCompleted,
               nextReqMessageID: res.data.nextReqMessageID,
@@ -278,7 +282,6 @@ Page({
   focus(e) {
     this.setData({
       isFocus: true,
-      inputBottom: e.target.height,
     });
   },
 
@@ -286,7 +289,6 @@ Page({
   blur(e) {
     this.setData({
       isFocus: false,
-      inputBottom: 0,
     });
   },
 
@@ -476,7 +478,7 @@ Page({
       wx.tim
         .sendMessage(message)
         .then((imResponse) => {
-          this.sendMessageToView(message);
+          this.sendMessageToView([message]);
           this.setData({
             messageContent: "",
           });
@@ -503,33 +505,51 @@ Page({
   // 发送图片
   sendPhoto() {
     wx.chooseImage({
-      count: 1,
+      count: 9,
       success: (res) => {
         wx.showLoading({
           mask: true,
         });
-        const message = wx.tim.createImageMessage({
-          to: this.data.userId,
-          conversationType: wx.TIM.TYPES.CONV_C2C,
-          payload: {
-            file: res,
-          },
-          onProgress: (percent) => {},
-        });
-        wx.tim
-          .sendMessage(message)
-          .then((imResponse) => {
-            this.sendMessageToView(message);
-            wx.hideLoading();
-            this.handleClose();
-          })
-          .catch((imError) => {
-            wx.showToast({
-              title: "图片发送失败",
-              icon: "none",
+
+        // 循环发送
+        let sendArr = [];
+        if (res.tempFiles.length > 1) {
+          res.tempFiles.forEach((item) => {
+            sendArr.push({
+              errMsg: res.errMsg,
+              tempFilePaths: [item.path],
+              tempFiles: [item],
             });
-            wx.hideLoading();
           });
+        } else {
+          sendArr = [res];
+        }
+        sendArr.forEach((item) => {
+          const message = wx.tim.createImageMessage({
+            to: this.data.userId,
+            conversationType: wx.TIM.TYPES.CONV_C2C,
+            payload: {
+              file: item,
+            },
+            onProgress: (percent) => {},
+          });
+          wx.tim
+            .sendMessage(message)
+            .then((imResponse) => {
+              this.sendMessageToView([message]);
+              wx.hideLoading();
+              this.handleClose();
+            })
+            .catch((imError) => {
+              wx.showToast({
+                title: "图片发送失败",
+                icon: "none",
+              });
+              wx.hideLoading();
+            });
+        });
+        if (res.tempFiles) {
+        }
       },
     });
   },
@@ -555,7 +575,7 @@ Page({
         wx.tim
           .sendMessage(message)
           .then((imResponse) => {
-            this.sendMessageToView(message);
+            this.sendMessageToView([message]);
             wx.hideLoading();
             this.handleClose();
           })
@@ -593,7 +613,7 @@ Page({
             wx.tim
               .sendMessage(message)
               .then(() => {
-                this.sendMessageToView(message);
+                this.sendMessageToView([message]);
                 this.handleClose();
               })
               .catch((imError) => {
@@ -638,18 +658,18 @@ Page({
   },
 
   // 发送消息到页面上
-  sendMessageToView(message) {
-    if (Array.isArray(message)) {
-      this.setData({
-        msgList: [...this.unshiftMessageList(message), ...this.data.msgList],
-      });
+  sendMessageToView(messageArr, isGetList) {
+    const unshiftMessageList = this.unshiftMessageList(messageArr);
+    let msgList = [];
+    if (isGetList) {
+      msgList = [...unshiftMessageList, ...this.data.msgList];
     } else {
-      message.virtualDom = decodeElement(message);
-      this.setData({
-        msgList: [...this.data.msgList, ...this.unshiftMessageList([message])],
-      });
-      this.scrollToBottom();
+      msgList = [...this.data.msgList, ...unshiftMessageList];
     }
+    this.setData({
+      msgList,
+    });
+    this.scrollToBottom();
   },
 
   // 加入黑名单
