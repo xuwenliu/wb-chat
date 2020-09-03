@@ -2,9 +2,6 @@
 
 @import "../../style/main.wxss";
 @import "../../style/icon.wxss";
-/* .cu-chat {
-  padding-bottom: 50px;
-} */
 
 .cu-chat .cu-item > .main.location {
   width: 600rpx;
@@ -165,6 +162,8 @@
   flex-wrap: wrap;
   overflow-y: scroll;
   box-sizing: border-box;
+  margin-top: 32rpx;
+
 }
 .bottom-emoji .emojis .emoji {
   height: 12.5vw;
@@ -199,6 +198,7 @@
   display: flex;
   padding: 0 12px;
   align-items: flex-start;
+  margin-top: 32rpx;
 }
 
 .bottom-image .images .block {

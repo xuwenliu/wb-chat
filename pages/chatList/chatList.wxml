@@ -8,7 +8,7 @@
         </view>
     </view>
     <block wx:for="{{conversationList}}" wx:key="index">
-        <view bindtap="jumpChat" data-userid="{{item.userProfile.userID}}" data-avatar="{{item.userProfile.avatar}}" data-conversationid="{{item.conversationID}}" data-unreadCount="{{item.unreadCount}}" wx:if="{{item.type === 'C2C'}}" class="cu-item {{modalName=='move-box-'+ index?'move-cur':''}}" bindtouchstart="ListTouchStart" bindtouchmove="ListTouchMove" bindtouchend="ListTouchEnd" data-target="move-box-{{index}}">
+        <view bindtap="jumpChat" bind:longpress="handleLongPress" data-conversationid="{{item.conversationID}}" data-userid="{{item.userProfile.userID}}" data-avatar="{{item.userProfile.avatar}}" data-conversationid="{{item.conversationID}}" data-unreadCount="{{item.unreadCount}}" wx:if="{{item.type === 'C2C'}}" class="cu-item">
             <view class="cu-avatar round lg" style="background-image:url({{item.userProfile.avatar}});"></view>
             <view class="content">
                 <view class="text-pink">
@@ -24,11 +24,6 @@
                 <view class="text-grey text-xs">{{item.lastMessage._lastTime}}</view>
                 <view class="cu-tag round bg-red sm" wx:if="{{item.unreadCount > 0}}">
                     <text>{{item.unreadCount > 99 ? '99+':item.unreadCount}}</text>
-                </view>
-            </view>
-            <view class="move">
-                <view catchtap="removeConversation" data-conversationid="{{item.conversationID}}" class="bg-red">
-                    删除
                 </view>
             </view>
         </view>

@@ -1,15 +1,12 @@
 import { emojiName, emojiMap, emojiUrl } from "../../utils/emojiMap";
 import { Chat } from "../../utils/im";
 import { decodeElement } from "../../utils/decodeElement";
-import { throttle } from "../../utils/util";
+import { throttle, filterDate } from "../../utils/util";
 
 const app = getApp();
 let that = null;
 
 const windowHeight = wx.getSystemInfoSync().windowHeight;
-const isIphone = wx.getSystemInfoSync().model.indexOf("iPhone") > -1;
-let keyHeight = 0;
-
 const audioContext = wx.createInnerAudioContext();
 const recorderManager = wx.getRecorderManager();
 const recordOptions = {
@@ -22,9 +19,8 @@ const recordOptions = {
 
 Page({
   data: {
-    isIphone: isIphone,
+    inputBottom: 0,
     isShow: false,
-    // isSDKReady: false,
     currentConversationID: "",
     nextReqMessageID: "",
     isCompleted: false, // 当前会话消息是否已经请求完毕
@@ -34,7 +30,6 @@ Page({
     avatar: "", // 发送给谁的头像
     msgList: [],
     messageContent: "", // 用户输入的文本内容
-    inputBottom: 0,
 
     // 录音相关
     isRecord: false,
@@ -64,7 +59,6 @@ Page({
 
   watch: {
     isSDKReady(newValue) {
-      console.log("newValue", newValue);
       if (!newValue) {
         return;
       }
@@ -143,8 +137,9 @@ Page({
             icon: "none",
           });
         } else {
-          console.log(res);
-          wx.showLoading();
+          wx.showLoading({
+            mask: true,
+          });
           const message = wx.tim.createAudioMessage({
             to: this.data.userId,
             conversationType: wx.TIM.TYPES.CONV_C2C,
@@ -226,6 +221,7 @@ Page({
     for (let i = 0; i < list.length; i++) {
       let message = list[i];
       list[i].virtualDom = decodeElement(message);
+      list[i].newTime = filterDate(message.time);
     }
     return [...list];
   },
@@ -234,6 +230,7 @@ Page({
   getMessageList() {
     // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
     if (!this.data.currentConversationID) {
+      wx.stopPullDownRefresh();
       return;
     }
     // 判断是否拉完了，isCompleted 的话要报一下没有更多了
@@ -258,9 +255,7 @@ Page({
             });
             wx.stopPullDownRefresh();
           })
-          .catch((err) => {
-            console.log(err);
-          });
+          .catch((err) => {});
       } else {
         wx.showToast({
           title: "你拉的太快了",
@@ -281,19 +276,17 @@ Page({
    * 获取聚焦
    */
   focus(e) {
-    keyHeight = e.detail.height;
-    console.log('keyHeight',keyHeight)
     this.setData({
       isFocus: true,
-      inputBottom: keyHeight + "px",
+      inputBottom: e.target.height,
     });
   },
 
   //失去聚焦(软键盘消失)
   blur(e) {
     this.setData({
-      inputBottom: 0,
       isFocus: false,
+      inputBottom: 0,
     });
   },
 
@@ -409,7 +402,6 @@ Page({
 
   // 视频播放出错
   videoError(e) {
-    console.log(e);
     wx.showToast({
       icon: "none",
       title: `视频出现错误，错误信息${e.detail.errMsg}`,
@@ -430,8 +422,10 @@ Page({
         isMoreOpen: false,
         isEmojiOpen: !this.data.isEmojiOpen,
       });
-      this.scrollToBottom();
     }
+    wx.pageScrollTo({
+      scrollTop: 99999,
+    });
   },
 
   // 发消息选中emoji
@@ -463,8 +457,10 @@ Page({
         isMoreOpen: !this.data.isMoreOpen,
         isEmojiOpen: false,
       });
-      this.scrollToBottom();
     }
+    wx.pageScrollTo({
+      scrollTop: 99999,
+    });
   },
 
   // 发送text + emoji
@@ -484,10 +480,8 @@ Page({
           this.setData({
             messageContent: "",
           });
-          console.log("发送成功", imResponse);
         })
         .catch((imError) => {
-          console.log("发送失败", imError);
           wx.showToast({
             title: "消息发送失败",
             icon: "none",
@@ -511,16 +505,16 @@ Page({
     wx.chooseImage({
       count: 1,
       success: (res) => {
-        wx.showLoading();
+        wx.showLoading({
+          mask: true,
+        });
         const message = wx.tim.createImageMessage({
           to: this.data.userId,
           conversationType: wx.TIM.TYPES.CONV_C2C,
           payload: {
             file: res,
           },
-          onProgress: (percent) => {
-            console.log("上传进度", percent);
-          },
+          onProgress: (percent) => {},
         });
         wx.tim
           .sendMessage(message)
@@ -547,7 +541,9 @@ Page({
       maxDuration: 60,
       camera: "back",
       success: (res) => {
-        wx.showLoading();
+        wx.showLoading({
+          mask: true,
+        });
         const message = wx.tim.createVideoMessage({
           to: this.data.userId,
           conversationType: wx.TIM.TYPES.CONV_C2C,
@@ -650,7 +646,7 @@ Page({
     } else {
       message.virtualDom = decodeElement(message);
       this.setData({
-        msgList: [...this.data.msgList, message],
+        msgList: [...this.data.msgList, ...this.unshiftMessageList([message])],
       });
       this.scrollToBottom();
     }
@@ -663,6 +659,7 @@ Page({
         userIDList: [this.data.userId],
       })
       .then(() => {
+        this.handleClose();
         wx.showToast({
           title: "加入黑名单成功",
           icon: "none",

@@ -29,8 +29,6 @@ Page({
   },
 
   onShow() {
-    console.log("onShow", app.globalData.pageName);
-
     // 1.这里不能放在onLoad里面，因为切换tab只执行onShow，onLoad只是执行一次。
     // 阻止未授权的用户进入聊天列表
     if (!app.globalData.userInfo.u_account) {
@@ -58,6 +56,9 @@ Page({
       new Chat(app.globalData.userInfo.u_account, this.messageReceived);
     }
   },
+  onPullDownRefresh() {
+    this.getConversationList();
+  },
 
   // 会话列表-格式化时间
   updateAllConversation(list) {
@@ -75,13 +76,12 @@ Page({
 
   // 获取会话列表
   getConversationList() {
-    wx.showLoading();
     wx.tim.getConversationList().then((imResponse) => {
       const conversationList = imResponse.data.conversationList;
-      wx.hideLoading();
       this.setData({
         conversationList: this.updateAllConversation(conversationList),
       });
+      wx.stopPullDownRefresh();
     });
   },
 
@@ -104,7 +104,6 @@ Page({
     wx.navigateTo({
       url: `../chat/chat?userId=${userid}&avatar=${avatar}&currentConversationID=${conversationid}`,
     });
-
   },
 
   // 跳转黑名单
@@ -114,36 +113,15 @@ Page({
     });
   },
 
-
-  // 左滑删除当前会话
-  // ListTouch触摸开始
-  ListTouchStart(e) {
-    this.setData({
-      ListTouchStart: e.touches[0].pageX,
-    });
-  },
-
-  // ListTouch计算方向
-  ListTouchMove(e) {
-    this.setData({
-      ListTouchDirection:
-        e.touches[0].pageX - this.data.ListTouchStart > 0 ? "right" : "left",
-    });
-  },
-
-  // ListTouch计算滚动
-  ListTouchEnd(e) {
-    if (this.data.ListTouchDirection == "left") {
-      this.setData({
-        modalName: e.currentTarget.dataset.target,
-      });
-    } else {
-      this.setData({
-        modalName: null,
-      });
-    }
-    this.setData({
-      ListTouchDirection: null,
+  // 长按删除会话
+  handleLongPress(e) {
+    wx.showActionSheet({
+      itemList: ["删除"],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          this.removeConversation(e);
+        }
+      },
     });
   },
 
