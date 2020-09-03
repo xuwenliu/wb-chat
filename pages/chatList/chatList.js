@@ -78,6 +78,7 @@ Page({
   getConversationList() {
     wx.tim.getConversationList().then((imResponse) => {
       const conversationList = imResponse.data.conversationList;
+      console.log('conversationList',conversationList);
       this.setData({
         conversationList: this.updateAllConversation(conversationList),
       });

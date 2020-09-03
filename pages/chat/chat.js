@@ -1,7 +1,18 @@
-import { emojiName, emojiMap, emojiUrl } from "../../utils/emojiMap";
-import { Chat } from "../../utils/im";
-import { decodeElement } from "../../utils/decodeElement";
-import { throttle, filterDate } from "../../utils/util";
+import {
+  emojiName,
+  emojiMap,
+  emojiUrl
+} from "../../utils/emojiMap";
+import {
+  Chat
+} from "../../utils/im";
+import {
+  decodeElement
+} from "../../utils/decodeElement";
+import {
+  throttle,
+  filterDate
+} from "../../utils/util";
 
 const app = getApp();
 let that = null;
@@ -95,7 +106,11 @@ Page({
 
   onLoad(options) {
     that = this;
-    const { userId, avatar, currentConversationID } = options;
+    const {
+      userId,
+      avatar,
+      currentConversationID
+    } = options;
 
     this.setData({
       avatar,
@@ -178,7 +193,9 @@ Page({
     wx.tim.logout();
   },
   onPullDownRefresh() {
-    throttle(this.getMessageList, 1000)();
+    throttle(() => {
+      this.getMessageList(true)
+    }, 1000)();
   },
 
   // 监听消息接收
@@ -198,13 +215,16 @@ Page({
     query
       .select("#chat")
       .boundingClientRect(function (res) {
-        if (res.bottom - windowHeight < 200) {
-          if (that.data.isShow) {
-            wx.pageScrollTo({
-              scrollTop: 99999,
-            });
+        if (res) {
+          if (res.bottom - windowHeight < 200) {
+            if (that.data.isShow) {
+              wx.pageScrollTo({
+                scrollTop: 99999,
+              });
+            }
           }
         }
+
       })
       .exec();
 
@@ -231,7 +251,8 @@ Page({
   },
 
   // 获取消息列表
-  getMessageList() {
+  getMessageList(isRefresh) {
+    console.log(isRefresh)
     // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
     if (!this.data.currentConversationID) {
       wx.stopPullDownRefresh();
@@ -251,7 +272,8 @@ Page({
             count: 15,
           })
           .then((res) => {
-            this.sendMessageToView(res.data.messageList, true);
+            console.log('res', res)
+            this.sendMessageToView(res.data.messageList, true, isRefresh);
             this.setData({
               isCompleted: res.data.isCompleted,
               nextReqMessageID: res.data.nextReqMessageID,
@@ -260,12 +282,6 @@ Page({
             wx.stopPullDownRefresh();
           })
           .catch((err) => {});
-      } else {
-        wx.showToast({
-          title: "你拉的太快了",
-          icon: "none",
-          duration: 500,
-        });
       }
     } else {
       wx.showToast({
@@ -548,8 +564,7 @@ Page({
               wx.hideLoading();
             });
         });
-        if (res.tempFiles) {
-        }
+        if (res.tempFiles) {}
       },
     });
   },
@@ -595,7 +610,10 @@ Page({
     wx.getLocation({
       type: "gcj02",
       success: (res) => {
-        const { latitude, longitude } = res;
+        const {
+          latitude,
+          longitude
+        } = res;
         wx.chooseLocation({
           latitude,
           longitude,
@@ -648,7 +666,11 @@ Page({
 
   // 位置预览
   viewLocation(e) {
-    const { latitude, longitude, address } = e.currentTarget.dataset;
+    const {
+      latitude,
+      longitude,
+      address
+    } = e.currentTarget.dataset;
     wx.openLocation({
       latitude: +latitude,
       longitude: +longitude,
@@ -658,7 +680,7 @@ Page({
   },
 
   // 发送消息到页面上
-  sendMessageToView(messageArr, isGetList) {
+  sendMessageToView(messageArr, isGetList, isRefresh) {
     const unshiftMessageList = this.unshiftMessageList(messageArr);
     let msgList = [];
     if (isGetList) {
@@ -669,7 +691,11 @@ Page({
     this.setData({
       msgList,
     });
-    this.scrollToBottom();
+    if (isRefresh) {
+
+    } else {
+      this.scrollToBottom();
+    }
   },
 
   // 加入黑名单
