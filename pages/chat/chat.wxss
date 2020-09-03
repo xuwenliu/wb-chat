@@ -8,22 +8,12 @@
 }
 
 .cu-chat .cu-item > .main .text-content {
-  padding: 20rpx;
-  border-radius: 6rpx;
-  max-width: 100%;
-  font-size: 30rpx;
-  position: relative;
-  min-height: 80rpx;
-  line-height: 40rpx;
-  text-align: left;
+  word-break: break-all;
 }
 .cu-chat .cu-item > .main .text-content .emoji {
   vertical-align: middle;
   width: 20px;
   height: 20px;
-}
-.cu-chat .cu-item > .main .text-content .text {
-  word-break: break-all;
 }
 
 .cu-chat .cu-item > .main.location .content {

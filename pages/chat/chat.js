@@ -19,6 +19,7 @@ const recordOptions = {
 
 Page({
   data: {
+    listHeight: 0,
     isShow: false,
     currentConversationID: "",
     nextReqMessageID: "",
@@ -197,28 +198,11 @@ Page({
 
   // 滚动到列表bottom
   scrollToBottom() {
-    let query = wx.createSelectorQuery();
-    let that = this;
-    query
-      .select("#chat")
-      .boundingClientRect(function (res) {
-        if (res) {
-          if (res.bottom - windowHeight < 200) {
-            if (that.data.isShow) {
-              wx.pageScrollTo({
-                scrollTop: 99999,
-              });
-            }
-          }
-        }
-      })
-      .exec();
-
     let interval = setInterval(() => {
       if (this.data.msgList.length !== 0) {
         if (this.data.isShow) {
           wx.pageScrollTo({
-            scrollTop: 99999,
+            scrollTop: 9999999999,
           });
         }
         clearInterval(interval);
@@ -238,7 +222,6 @@ Page({
 
   // 获取消息列表
   getMessageList(isRefresh) {
-    console.log(isRefresh);
     // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
     if (!this.data.currentConversationID) {
       wx.stopPullDownRefresh();
@@ -257,14 +240,14 @@ Page({
             nextReqMessageID: this.data.nextReqMessageID,
             count: 15,
           })
-          .then((res) => {
-            console.log("res", res);
+          .then(async (res) => {
             this.sendMessageToView(res.data.messageList, true, isRefresh);
             this.setData({
               isCompleted: res.data.isCompleted,
               nextReqMessageID: res.data.nextReqMessageID,
               isLoading: false,
             });
+
             wx.stopPullDownRefresh();
           })
           .catch((err) => {});
@@ -428,7 +411,7 @@ Page({
       });
     }
     wx.pageScrollTo({
-      scrollTop: 99999,
+      scrollTop: 9999999999,
     });
   },
 
@@ -463,7 +446,7 @@ Page({
       });
     }
     wx.pageScrollTo({
-      scrollTop: 99999,
+      scrollTop: 9999999999,
     });
   },
 
@@ -660,7 +643,7 @@ Page({
   },
 
   // 发送消息到页面上
-  sendMessageToView(messageArr, isGetList, isRefresh) {
+  async sendMessageToView(messageArr, isGetList, isRefresh) {
     const unshiftMessageList = this.unshiftMessageList(messageArr);
     let msgList = [];
     if (isGetList) {
@@ -672,6 +655,10 @@ Page({
       msgList,
     });
     if (isRefresh) {
+      wx.pageScrollTo({
+        selector: `#msg-${messageArr.length}`,
+        duration: 0,
+      });
     } else {
       this.scrollToBottom();
     }

@@ -5,15 +5,15 @@
         </view>
         <view class="modal-title">{{title}}</view>
     </view>
-    <view bind:tap="handleClose">
-    <block wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
+    <view id="list" bind:tap="handleClose">
+    <view id="msg-{{index}}" wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
         <!-- 文本+emoji  message.flow === 'out' 自己发送的消息 'in' 收到消息 -->
         <view wx:if="{{message.type === 'TIMTextElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
             <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
             <view class="main">
                 <view class="content text-content shadow {{message.flow === 'out'?'bg-green':''}}">
                     <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="index2">
-                        <text class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</text>
+                        <block class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</block>
                         <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
                     </block>
                 </view>
@@ -68,7 +68,7 @@
             <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
             <view class="date">{{message.newTime}}</view>
         </view>
-    </block>
+    </view>
     </view>
     <view class="bottom cu-bar foot input">
         <view class="bottom-view">
