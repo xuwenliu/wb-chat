@@ -1,18 +1,7 @@
-import {
-  emojiName,
-  emojiMap,
-  emojiUrl
-} from "../../utils/emojiMap";
-import {
-  Chat
-} from "../../utils/im";
-import {
-  decodeElement
-} from "../../utils/decodeElement";
-import {
-  throttle,
-  filterDate
-} from "../../utils/util";
+import { emojiName, emojiMap, emojiUrl } from "../../utils/emojiMap";
+import { Chat } from "../../utils/im";
+import { decodeElement } from "../../utils/decodeElement";
+import { throttle, filterDate } from "../../utils/util";
 
 const app = getApp();
 let that = null;
@@ -106,11 +95,7 @@ Page({
 
   onLoad(options) {
     that = this;
-    const {
-      userId,
-      avatar,
-      currentConversationID
-    } = options;
+    const { userId, avatar, currentConversationID } = options;
 
     this.setData({
       avatar,
@@ -181,6 +166,7 @@ Page({
     });
   },
   onShow() {
+    app.globalData.pageName = "chat";
     this.setData({
       isShow: true,
     });
@@ -190,11 +176,10 @@ Page({
     this.setData({
       isShow: false,
     });
-    wx.tim.logout();
   },
   onPullDownRefresh() {
     throttle(() => {
-      this.getMessageList(true)
+      this.getMessageList(true);
     }, 1000)();
   },
 
@@ -202,10 +187,12 @@ Page({
   async messageReceived(event) {
     console.log("监听消息接收", event);
     this.sendMessageToView(event.data);
-    // 同时设置会话为已读
-    await wx.tim.setMessageRead({
-      conversationID: this.data.currentConversationID,
-    });
+    if (app.globalData.pageName === "chat") {
+      // 同时设置会话为已读
+      await wx.tim.setMessageRead({
+        conversationID: this.data.currentConversationID,
+      });
+    }
   },
 
   // 滚动到列表bottom
@@ -224,7 +211,6 @@ Page({
             }
           }
         }
-
       })
       .exec();
 
@@ -252,7 +238,7 @@ Page({
 
   // 获取消息列表
   getMessageList(isRefresh) {
-    console.log(isRefresh)
+    console.log(isRefresh);
     // 如果不存在当前会话ID则说明第一次与该人会话，则不需要获取消息列表。
     if (!this.data.currentConversationID) {
       wx.stopPullDownRefresh();
@@ -272,7 +258,7 @@ Page({
             count: 15,
           })
           .then((res) => {
-            console.log('res', res)
+            console.log("res", res);
             this.sendMessageToView(res.data.messageList, true, isRefresh);
             this.setData({
               isCompleted: res.data.isCompleted,
@@ -564,7 +550,8 @@ Page({
               wx.hideLoading();
             });
         });
-        if (res.tempFiles) {}
+        if (res.tempFiles) {
+        }
       },
     });
   },
@@ -610,10 +597,7 @@ Page({
     wx.getLocation({
       type: "gcj02",
       success: (res) => {
-        const {
-          latitude,
-          longitude
-        } = res;
+        const { latitude, longitude } = res;
         wx.chooseLocation({
           latitude,
           longitude,
@@ -666,11 +650,7 @@ Page({
 
   // 位置预览
   viewLocation(e) {
-    const {
-      latitude,
-      longitude,
-      address
-    } = e.currentTarget.dataset;
+    const { latitude, longitude, address } = e.currentTarget.dataset;
     wx.openLocation({
       latitude: +latitude,
       longitude: +longitude,
@@ -692,7 +672,6 @@ Page({
       msgList,
     });
     if (isRefresh) {
-
     } else {
       this.scrollToBottom();
     }
