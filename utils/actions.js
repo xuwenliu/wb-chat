@@ -135,3 +135,11 @@ export const mReadMessage = params => {
     apiUrl: '/web/mini/msg/read'
   }), 'POST')
 }
+
+export const mGenTestUserSig = userId => {
+  return request(Object.assign({
+    apiUrl: '/stall/user/web/getUserSig?u_account=' + userId
+  }), 'GET')
+}
+
+
