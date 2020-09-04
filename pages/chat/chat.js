@@ -119,7 +119,8 @@ Page({
         mask: true,
       });
     }
-    new Chat(app.globalData.userInfo.u_account, this.messageReceived);
+    const userInfo = wx.getStorageSync("userInfo");
+    new Chat(userInfo.u_account, this.messageReceived);
 
     recorderManager.onStart(() => {
       console.log("recorder start");

@@ -24,14 +24,15 @@ Page({
 
   onLoad(options) {
     that = this;
-    app.globalData.pageName = "chatList";
     app.setWatcher(app.globalData, this.watch); // 设置监听，主要是监听 isSDKReady
   },
 
   onShow() {
+    app.globalData.pageName = "chatList";
     // 1.这里不能放在onLoad里面，因为切换tab只执行onShow，onLoad只是执行一次。
     // 阻止未授权的用户进入聊天列表
-    if (!app.globalData.userInfo.u_account) {
+    const userInfo = wx.getStorageSync("userInfo");
+    if (!userInfo.u_account) {
       wx.showModal({
         title: "提示",
         content: "请先授权登录",
@@ -53,8 +54,7 @@ Page({
       this.getConversationList();
     }
     // 反之则登录-具体登录在Chat这个类里面实现的。
-    new Chat(app.globalData.userInfo.u_account, this.messageReceived);
-
+    new Chat(userInfo.u_account, this.messageReceived);
   },
   onPullDownRefresh() {
     this.getConversationList();
@@ -78,7 +78,7 @@ Page({
   getConversationList() {
     wx.tim.getConversationList().then((imResponse) => {
       const conversationList = imResponse.data.conversationList;
-      console.log('conversationList',conversationList);
+      console.log("conversationList", conversationList);
       this.setData({
         conversationList: this.updateAllConversation(conversationList),
       });

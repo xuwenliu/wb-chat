@@ -99,12 +99,12 @@ Page({
 
   //私信
   chat() {
-    if (!this.data.account) {
+    const userInfo = wx.getStorageSync("userInfo");
+    if (!userInfo.u_account) {
       wx.showModal({
         title: "提示",
         content: "请先授权登录",
         success: (res) => {
-          console.log(res);
           if (res.confirm) {
             wx.switchTab({
               url: "../mine/mine",
