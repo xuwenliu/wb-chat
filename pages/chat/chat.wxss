@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 100rpx;
+  min-height: 150rpx;
   padding-right: 20rpx;
 }
 

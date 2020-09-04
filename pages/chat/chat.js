@@ -259,6 +259,7 @@ Page({
         icon: "none",
         duration: 1500,
       });
+      wx.stopPullDownRefresh();
     }
   },
 

@@ -1,4 +1,4 @@
-<view class="cu-chat" style="padding-bottom:{{isEmojiOpen || isMoreOpen?'220px':'70px'}}" id="chat">
+<view class="cu-chat" style="padding-bottom:{{isEmojiOpen || isMoreOpen?'250px':'90px'}}" id="chat">
     <view class="{{isRecording ? 'record-modal' : 'record-modal modal-display'}}">
         <view class="wrapper">
             <view class="modal-loading"></view>
@@ -6,69 +6,69 @@
         <view class="modal-title">{{title}}</view>
     </view>
     <view id="list" bind:tap="handleClose">
-    <view id="msg-{{index}}" wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
-        <!-- 文本+emoji  message.flow === 'out' 自己发送的消息 'in' 收到消息 -->
-        <view wx:if="{{message.type === 'TIMTextElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
-            <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-            <view class="main">
-                <view class="content text-content shadow {{message.flow === 'out'?'bg-green':''}}">
-                    <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="index2">
-                        <block class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</block>
-                        <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
-                    </block>
+        <view id="msg-{{index}}" wx:key="index" wx:for='{{msgList}}' wx:for-item="message" wx:for-index="index">
+            <!-- 文本+emoji  message.flow === 'out' 自己发送的消息 'in' 收到消息 -->
+            <view wx:if="{{message.type === 'TIMTextElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <view class="content text-content shadow {{message.flow === 'out'?'bg-green':''}}">
+                        <block wx:for="{{message.virtualDom}}" wx:for-item="div" wx:for-index="index2" wx:key="index2">
+                            <block class="text" wx:if="{{div.name === 'text'}}">{{div.text}}</block>
+                            <image class="emoji" wx:if="{{div.name === 'image'}}" src="{{div.src}}" />
+                        </block>
+                    </view>
                 </view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">{{message.newTime}}</view>
             </view>
-            <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-            <view class="date">{{message.newTime}}</view>
-        </view>
-        <!-- 图片 -->
-        <view wx:if="{{message.type === 'TIMImageElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
-            <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-            <view bindtap="previewImage" data-image="{{message.payload.imageInfoArray[1].url}}" class="main">
-                <image src="{{message.payload.imageInfoArray[1].url}}" class="radius" mode="widthFix"></image>
-            </view>
-            <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-            <view class="date">{{message.newTime}}</view>
-        </view>
-        <!-- 视频 -->
-        <view wx:if="{{message.type === 'TIMVideoFileElem'}}" class="cu-item {{message.flow === 'out'?' self':''}}">
-            <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-            <view class="main">
-                <video src="{{message.payload.videoUrl}}" class="video" poster="{{message.payload.thumbUrl}}" object-fit="contain" bind:error="videoError"></video>
-            </view>
-            <view class="date">{{message.newTime}}</view>
-            <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-        </view>
-        <!-- 位置 -->
-        <view wx:if="{{message.type === 'TIMCustomElem'}}" class="cu-item {{message.flow === 'out'?' self':''}}">
-            <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-            <view class="main location">
-                <view bindtap="viewLocation" data-longitude="{{message.payload.description}}" data-latitude="{{message.payload.data}}" data-address="{{message.payload.extension}}" class="content shadow">
-                    <text class="text-cut address">{{message.payload.extension}}</text>
-                    <map bindtap="viewLocation" data-longitude="{{message.payload.description}}" data-latitude="{{message.payload.data}}" data-address="{{message.payload.extension}}" scale="{{30}}" enable-zoom="{{false}}" enable-scroll="{{false}}" class="map" longitude="{{message.payload.description}}" latitude="{{message.payload.data}}"></map>
+            <!-- 图片 -->
+            <view wx:if="{{message.type === 'TIMImageElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view bindtap="previewImage" data-image="{{message.payload.imageInfoArray[1].url}}" class="main">
+                    <image src="{{message.payload.imageInfoArray[1].url}}" class="radius" mode="widthFix"></image>
                 </view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">{{message.newTime}}</view>
             </view>
-            <view class="date">{{message.newTime}}</view>
-            <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-        </view>
-        <!-- 语音 -->
-        <view wx:if="{{message.type === 'TIMSoundElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
-            <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
-            <view class="main">
-                <view wx:if="{{message.flow === 'out'}}" class="action text-bold text-black">
-                    {{message.payload.second}}s
+            <!-- 视频 -->
+            <view wx:if="{{message.type === 'TIMVideoFileElem'}}" class="cu-item {{message.flow === 'out'?' self':''}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <video src="{{message.payload.videoUrl}}" class="video" poster="{{message.payload.thumbUrl}}" object-fit="contain" bind:error="videoError"></video>
                 </view>
-                <view bindtap="openAudio" data-url="{{message.payload.url}}" class="content shadow {{message.flow === 'out'?'bg-green':''}}">
-                    <text class="cuIcon-sound text-xxl padding-right-sm"></text>
-                </view>
-                <view wx:if="{{message.flow !== 'out'}}" class="action text-bold text-black">
-                    {{message.payload.second}}s
-                </view>
+                <view class="date">{{message.newTime}}</view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
             </view>
-            <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
-            <view class="date">{{message.newTime}}</view>
+            <!-- 位置 -->
+            <view wx:if="{{message.type === 'TIMCustomElem'}}" class="cu-item {{message.flow === 'out'?' self':''}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main location">
+                    <view bindtap="viewLocation" data-longitude="{{message.payload.description}}" data-latitude="{{message.payload.data}}" data-address="{{message.payload.extension}}" class="content shadow">
+                        <text class="text-cut address">{{message.payload.extension}}</text>
+                        <map bindtap="viewLocation" data-longitude="{{message.payload.description}}" data-latitude="{{message.payload.data}}" data-address="{{message.payload.extension}}" scale="{{30}}" enable-zoom="{{false}}" enable-scroll="{{false}}" class="map" longitude="{{message.payload.description}}" latitude="{{message.payload.data}}"></map>
+                    </view>
+                </view>
+                <view class="date">{{message.newTime}}</view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+            </view>
+            <!-- 语音 -->
+            <view wx:if="{{message.type === 'TIMSoundElem'}}" class="cu-item {{message.flow === 'out'?'self':''}}">
+                <view wx:if="{{message.flow !== 'out'}}" class="cu-avatar round" style="background-image:url({{avatar}});"></view>
+                <view class="main">
+                    <view wx:if="{{message.flow === 'out'}}" class="action text-bold text-black">
+                        {{message.payload.second}}s
+                    </view>
+                    <view bindtap="openAudio" data-url="{{message.payload.url}}" class="content shadow {{message.flow === 'out'?'bg-green':''}}">
+                        <text class="cuIcon-sound text-xxl padding-right-sm"></text>
+                    </view>
+                    <view wx:if="{{message.flow !== 'out'}}" class="action text-bold text-black">
+                        {{message.payload.second}}s
+                    </view>
+                </view>
+                <view wx:if="{{message.flow === 'out'}}" class="cu-avatar round" style="background-image:url({{cusHeadIcon}});"></view>
+                <view class="date">{{message.newTime}}</view>
+            </view>
         </view>
-    </view>
     </view>
     <view class="bottom cu-bar foot input">
         <view class="bottom-view">
