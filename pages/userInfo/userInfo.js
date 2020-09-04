@@ -115,7 +115,7 @@ Page({
       return;
     } else {
       wx.navigateTo({
-        url: `../chat/chat?userId=${this.data.userId}&avatar=${this.data.userInfo.icon}`,
+        url: `../chat/chat?userId=${this.data.userId}&avatar=${this.data.userInfo?this.data.userInfo.icon:''}`,
       });
     }
   },

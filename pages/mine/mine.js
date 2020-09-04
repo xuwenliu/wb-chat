@@ -62,7 +62,10 @@ Page({
                               hasUserInfo: true
                             });
                             console.log(res2.userInfo);
-                            app.globalData.userInfo = res2.userInfo;
+                            app.globalData.userInfo = {
+                              ...res2.userInfo,
+                              u_account:res1.data.data.u_account
+                            };
                             app.globalData.u_account=res1.data.data.u_account;
                             app.globalData.u_role=res1.data.data.u_role;
                             console.log("gg1="+app.globalData.u_account+",uu="+app.globalData.u_role);
