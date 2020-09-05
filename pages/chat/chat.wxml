@@ -71,7 +71,7 @@
         </view>
     </view>
     <view class="bottom cu-bar foot input">
-        <view class="bottom-view">
+        <view class="bottom-view" style="min-height:{{isAndroid?'100rpx':'160rpx'}}">
             <view class="action" bindtap="chooseRecord">
                 <text class="text-black {{!isRecord ? 'cuIcon-sound' : 'cuIcon-voice'}}"></text>
             </view>

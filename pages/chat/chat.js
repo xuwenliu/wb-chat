@@ -9,6 +9,7 @@ let that = null;
 const windowHeight = wx.getSystemInfoSync().windowHeight;
 const audioContext = wx.createInnerAudioContext();
 const recorderManager = wx.getRecorderManager();
+const isAndroid = wx.getSystemInfoSync().system.indexOf("Android") > -1;
 const recordOptions = {
   duration: 60000,
   sampleRate: 44100,
@@ -19,7 +20,7 @@ const recordOptions = {
 
 Page({
   data: {
-    listHeight: 0,
+    isAndroid,
     isShow: false,
     currentConversationID: "",
     nextReqMessageID: "",
